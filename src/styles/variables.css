@@ -1,35 +1,64 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500&display=swap');
+
 :root {
-  /* Цвета */
-  --color-bg: #0f0f0f;
-  --color-surface: #1a1a1a;
-  --color-border: #2a2a2a;
-  --color-text-primary: #ffffff;
-  --color-text-secondary: #a0a0a0;
-  --color-accent: #4f8ef7;
-  --color-success: #34d399;
-  --color-danger: #f87171;
-  --color-warning: #fbbf24;
+  /* Colors (from Figma Home frame 814:1013) */
+  --color-background: #f6f6f5;
+  --color-surface: #ffffff;
+  --color-surface-elevated: #fafafa;
+  --color-surface-muted: #eaeaea;
+  --color-border: #e2e2e2;
+  --color-text-primary: #2c2c2c;
+  --color-text-secondary: #969696;
+  --color-on-accent: #ffffff;
 
-  /* Типографика */
-  --font-size-xs: 12px;
-  --font-size-sm: 14px;
-  --font-size-md: 16px;
-  --font-size-lg: 20px;
-  --font-size-xl: 24px;
+  /* Accent / gradients */
+  --color-accent-1: #5c03bc;
+  --color-accent-2: #e536ab;
+  --color-accent-3: #0e0725;
 
-  /* Отступы */
-  --spacing-xs: 4px;
-  --spacing-sm: 8px;
-  --spacing-md: 16px;
-  --spacing-lg: 24px;
-  --spacing-xl: 32px;
+  /* Typography */
+  --font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+  --font-brand: 'Montserrat', var(--font-sans);
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-size-12: 12px;
+  --font-size-16: 16px;
+  --font-size-20: 20px;
+  --font-size-36: 36px;
+  --line-height-normal: normal;
 
-  /* Радиусы */
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 20px;
+  /* Radii */
+  --radius-pill: 30px;
+  --radius-md: 10px;
 
-  /* Медиа */
-  --breakpoint-tablet: 768px;
+  /* Spacing */
+  --space-6: 6px;
+  --space-4: 4px;
+  --space-8: 8px;
+  --space-10: 10px;
+  --space-12: 12px;
+  --space-16: 16px;
+  --space-18: 18px;
+  --space-20: 20px;
+  --space-24: 24px;
+
+  /* Shadows */
+  --shadow-sm: 0px 0px 4px 0px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0px 0px 10px 4px rgba(0, 0, 0, 0.1);
+
+  /* Icon sizes */
+  --icon-size-sm: 20px;
+  --icon-size-md: 30px;
+
+  /* Control sizes */
+  --control-height-sm: 42px;
+  --control-height-lg: 62px;
+
+  /* Layout */
+  --bottom-nav-offset: calc(var(--control-height-lg) + 18px);
+  --chat-input-gap-above-nav: 22px;
+
+  /* Gradients & accents */
+  --gradient-card: linear-gradient(90deg, #243748 0%, #4b749f 100%);
+  --color-accent-green: #66d992;
 }
-

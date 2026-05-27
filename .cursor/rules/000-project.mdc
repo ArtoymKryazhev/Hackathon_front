@@ -1,0 +1,37 @@
+---
+description: "Core project rules — FinHelper hackathon"
+alwaysApply: true
+---
+
+## Проект
+Мобильный веб-сервис для управления личными финансами. MVP за 48 часов.
+Mobile-first. Аудитория — люди без финансовой экспертизы.
+
+## Стек
+- React + Vite, JavaScript (НЕ TypeScript)
+- CSS Modules (НЕ Tailwind, НЕ inline styles, НЕ styled-components)
+- zustand — глобальное состояние
+- recharts — графики
+- react-router-dom v6 — роутинг
+- axios — HTTP-запросы
+
+## Структура папок
+- src/shared/ui/      — атомарные UI-компоненты (Button, Input, Card)
+- src/components/     — составные блоки страниц
+- src/pages/          — экраны целиком
+- src/store/          — zustand-сторы
+- src/api/            — все запросы к бэку
+
+## НЕЛЬЗЯ
+- Не добавлять TypeScript
+- Не использовать UI-библиотеки (MUI, Ant, Chakra) без явного согласования
+- Не создавать новые папки верхнего уровня без согласования
+- Не менять package.json без запроса
+- Не делать большие рефакторинги — только точечные правки
+- Не использовать inline styles и Tailwind
+
+## Работа в Agent mode
+1. Перечисли затрагиваемые файлы и предложи подход
+2. Жди подтверждения
+3. Только после — вносить изменения
+4. Меняй только файлы из задачи

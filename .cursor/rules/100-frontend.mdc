@@ -1,0 +1,27 @@
+---
+description: "Frontend rules"
+globs: ["src/**"]
+alwaysApply: false
+---
+
+## CSS Modules
+- Каждый компонент имеет свой файл ComponentName.module.css
+- Классы — camelCase: styles.cardWrapper, styles.primaryButton
+- Глобальные переменные — в src/styles/variables.css через :root
+- Медиа-запросы только через переменные из variables.css
+
+## Компоненты
+- Функциональные компоненты, стрелочные функции
+- Пропсы деструктурируются в параметрах
+- Один компонент — один файл
+- Экспорт: export default в конце файла
+
+## Mobile-first
+- Базовые стили — для мобильного
+- @media (min-width: 768px) — для планшета и выше
+- Минимальный touch-target: 44px
+
+## Состояние
+- Локальное — useState
+- Глобальное (транзакции, теги, пользователь) — zustand
+- Не использовать prop drilling глубже 2 уровней
