@@ -41,6 +41,7 @@
   --space-18: 18px;
   --space-20: 20px;
   --space-24: 24px;
+  --space-32: 32px;
 
   /* Shadows */
   --shadow-sm: 0px 0px 4px 0px rgba(0, 0, 0, 0.05);
@@ -56,8 +57,12 @@
   --control-height-lg: 62px;
 
   /* Layout */
+  --layout-max-width: 440px;
   --bottom-nav-offset: calc(var(--control-height-lg) + 18px);
   --chat-input-gap-above-nav: 22px;
+
+  /* Analytics / plan card */
+  --color-plan-accent: #4b749f;
 
   /* Gradients & accents */
   --gradient-card: linear-gradient(90deg, #243748 0%, #4b749f 100%);

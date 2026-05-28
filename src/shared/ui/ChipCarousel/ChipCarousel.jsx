@@ -17,7 +17,7 @@ export function ChipCarousel({
   const indicatorRef = useRef(null)
   const itemRefs = useRef(new Map())
   const activeIdRef = useRef(activeId)
-  const { scrollerRef, isDragging, dragHandlers } = useDragScroll()
+  const { scrollerRef, isDragging, dragHandlers } = useDragScroll({ threshold: 8 })
   const [activeAnchorId, setActiveAnchorId] = useState(
     mode === 'anchor' ? (activeId ?? (items?.[0] ? (typeof items[0] === 'string' ? items[0] : items[0].id) : undefined)) : undefined,
   )

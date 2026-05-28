@@ -6,73 +6,63 @@
 ## Что сделано
 - [x] **Скелет React + Vite** (JavaScript) + базовые глобальные стили
 - [x] **Роутинг** (react-router-dom) и раскладка через `AppShell`
-- [x] **Home** по Figma (фрейм 814:1013): карусель категорий, блок баланса, заголовок, чат-виджет
-- [x] **Accounts** по Figma (фрейм 814:1381): общий баланс, секции продуктов по категориям, якорная навигация
-- [x] **Transactions** по Figma (фрейм 814:1087): траты за месяц, ближайшие платежи, действия, список транзакций
-- [x] **BottomNav** (фиксированный снизу): 3 пункта навигации с active-state + action-кнопка «+» (noop)
-- [x] **Design tokens**: `src/styles/variables.css` (CSS-переменные) + базовые layout-токены
-- [x] **shared/ui**: `Chip`, `ChipCarousel`, `AiChatWidget`, `BackButton`, `ProductCard`, `MonthlySpendingCard`, `PaymentCard`, `TransactionItem`
-- [x] **zustand**: `useAccountsStore` (продукты), `useTransactionsStore` (траты, платежи, транзакции)
-- [x] **Моки и утилиты**: `bankProducts`, `payments`, `transactions`, `monthlySpending`; `paymentUtils`, `formatters`, `serviceColorMap`
-- [x] **Хук** `useDragScroll` — перетаскивание горизонтальных каруселей (ChipCarousel, платежи)
-- [x] **Заглушки с навигацией**: `TransactionStats`, `TransactionFilter` (BackButton + текст)
-- [x] Линт и сборка проходят: `npm run lint`, `npm run build`
+- [x] **Home** по Figma (814:1013): карусель категорий, блок баланса, заголовок, чат-виджет
+- [x] **Accounts** по Figma (814:1381): общий баланс, секции продуктов, якорная навигация
+- [x] **Transactions** по Figma (814:1087): траты за месяц, платежи, фильтры/аналитика, список транзакций
+- [x] **TransactionStats** (`/transactions/stats`) по Figma: donut recharts, переключатель расходы/доходы, карусель тегов, блок «В этом месяце»
+- [x] **DonutChartCard** + `calcTransactionStats`: группировка по категориям, мин. размер сегмента на графике (~5.5%), легенда с реальными суммами
+- [x] **CategoryFolderCard** — кнопки → `/transactions/tags/:tagId`
+- [x] **TransactionTag** — заглушка категории по id (под будущий API)
+- [x] **BottomNav**, design tokens, **useDragScroll**
+- [x] **shared/ui**: Chip, ChipCarousel, AiChatWidget, BackButton, ProductCard, MonthlySpendingCard, PaymentCard, TransactionItem, DonutChartCard, CategoryFolderCard, CategorySummaryCard
+- [x] **zustand**: `useAccountsStore`, `useTransactionsStore` (+ `operationType`)
+- [x] **Моки**: `bankProducts`, `payments`, `transactions`, `monthlySpending`, `tags`
+- [x] Линт и сборка: `npm run lint`, `npm run build`
 
 ## В процессе
-- [ ] Тонкие визуальные правки Transactions / Home по Figma (иконки сервисов, кэшбэк в списке)
-- [ ] Страница аналитики (`/transactions/stats`) — графики recharts
+- [ ] Тонкие визуальные правки Home / Transactions (иконки сервисов, кэшбэк в списке)
 
 ## Осталось (до хакатона)
 - [ ] Реальная логика фильтров (`/transactions/filter`)
-- [ ] Графики (recharts) на экране аналитики
+- [ ] Контент страницы тега (`/transactions/tags/:tagId`) — список операций по tagId
 - [ ] API слой (axios) — когда будет готов бэк/контракт
-- [ ] Иконки банков/сервисов в карточках платежей и транзакций
+- [ ] Иконки банков/сервисов в PaymentCard и TransactionItem
 
 ## На хакатоне
-- [ ] Интеграция с бэкендом (axios): продукты, транзакции, платежи
+- [ ] Интеграция с бэкендом (axios): продукты, транзакции, платежи, теги
 - [ ] Развитие чата (сохранение текста вопроса, реальная логика)
 - [ ] Доп. экраны: цели/накопления/импорт (PDF/QR) — если успеем
 
 ## Известные проблемы
-- (пока нет критических; возможны мелкие визуальные правки по Figma)
-- ESLint warning в `ChipCarousel` (exhaustive-deps для `useEffect`) — не блокирует сборку
+- ESLint warning в `ChipCarousel` (exhaustive-deps) — не блокирует сборку
+- Доли на donut — визуальные (мин. сегмент), в легенде — фактические суммы
 
 ## Стек
-React + Vite | JavaScript | CSS Modules | zustand | axios | recharts | react-router-dom
+React + Vite | JavaScript | CSS Modules | zustand | recharts | axios (в планах) | react-router-dom
 
 ## Ограничения
 - Без TypeScript, Tailwind, Redux, React Query, Next.js
 
-## Ключевые сущности (что уже есть в коде)
-- **Роутинг**: `src/App.jsx`
+## Ключевые сущности
+- **Роутинг** (`src/App.jsx`):
   - С BottomNav: `/`, `/transactions`, `/settings`
-  - Без BottomNav: `/accounts`, `/transactions/stats`, `/transactions/filter`, `/chat`, `/profile`
-- **Layout**: `src/components/AppShell/AppShell.jsx`
-- **BottomNav**: `/` (Меню), `/transactions` (Кошелёк), `/settings` (Задачи)
-- **shared/ui** (дополнительно к Home/Accounts):
-  - `MonthlySpendingCard` — блок «Траты в этом месяце», календарь → `/transactions/stats`
-  - `PaymentCard` — карточка ближайшего платежа (цвет из `SERVICE_COLOR_MAP`)
-  - `TransactionItem` — строка транзакции в списке
-- **Данные/логика**:
-  - `src/stores/useAccountsStore.js`
-  - `src/stores/useTransactionsStore.js` — `monthlySpending`, `payments`, `transactions`; селекторы `sortedPayments()`, `groupedTransactions()`
-  - `src/lib/mocks/` — `bankProducts`, `payments`, `transactions`, `monthlySpending`
-  - `src/lib/utils/` — `paymentUtils`, `formatters`
-  - `src/lib/constants/` — `productTypeMap`, `serviceColorMap`
-  - `src/lib/hooks/useDragScroll.js`
+  - Без BottomNav: `/accounts`, `/transactions/stats`, `/transactions/filter`, `/transactions/tags/:tagId`, `/chat`, `/profile`
+- **Аналитика**: `src/pages/Transactions/Stats/TransactionStats.jsx`
+- **Утилиты**: `calcTransactionStats.js` — `chartData`, `summaryData`, `applyMinimumChartSegmentPercents`
+- **Стор**: `useTransactionsStore` — `operationType`, `setOperationType`; селекторы `sortedPayments()` / `groupedTransactions()` — не в подписке zustand, только `useMemo` на странице
 
 ## Состояние страниц
-- **Home** — готово (см. выше)
-- **Accounts** — готово (см. выше)
-- **Transactions** — `src/pages/Transactions/Transactions.jsx`
-  - `MonthlySpendingCard`, карусель `PaymentCard` (drag-scroll, snap `proximity`)
-  - кнопки «Фильтры» / «Аналитика»
-  - группы транзакций по дате (`formatTransactionGroupDate`)
-- **TransactionStats** — заглушка: «Скоро здесь будет подробная аналитика»
-- **TransactionFilter** — заглушка: «Скоро здесь появятся фильтры операций»
-- **Заглушки** (только базовый UI): `Settings`, `Chat`, `Profile`
+| Страница | Роут | Статус |
+|----------|------|--------|
+| Home | `/` | ✅ |
+| Accounts | `/accounts` | ✅ |
+| Transactions | `/transactions` | ✅ |
+| TransactionStats | `/transactions/stats` | ✅ UI + recharts |
+| TransactionFilter | `/transactions/filter` | 🔶 заглушка |
+| TransactionTag | `/transactions/tags/:tagId` | 🔶 заглушка |
+| Settings, Chat, Profile | … | 🔶 заглушки |
 
 ## Следующий этап
-1. **Аналитика** — UI + recharts на `/transactions/stats`
-2. **Фильтры** — форма/чипы на `/transactions/filter`
-3. **API** — подключение axios вместо моков
+1. **Фильтры** — форма/чипы на `/transactions/filter`
+2. **Тег** — операции по `tagId` после API
+3. **API** — axios вместо моков

@@ -1,6 +1,8 @@
 import { useRef, useState } from 'react'
 
-export function useDragScroll() {
+const DEFAULT_DRAG_THRESHOLD_PX = 4
+
+export function useDragScroll({ threshold = DEFAULT_DRAG_THRESHOLD_PX } = {}) {
   const scrollerRef = useRef(null)
   const dragRef = useRef({
     isDown: false,
@@ -24,8 +26,6 @@ export function useDragScroll() {
     dragRef.current.moved = false
     dragRef.current.justDragged = false
     setIsDragging(false)
-
-    scroller.setPointerCapture?.(e.pointerId)
   }
 
   const onPointerMove = (e) => {
@@ -35,16 +35,18 @@ export function useDragScroll() {
 
     const dx = e.clientX - dragRef.current.startX
 
-    if (!dragRef.current.moved && Math.abs(dx) >= 8) {
+    if (!dragRef.current.moved) {
+      if (Math.abs(dx) < threshold) return
+
       dragRef.current.moved = true
       setIsDragging(true)
+      scroller.setPointerCapture?.(dragRef.current.pointerId)
     }
 
     if (dragRef.current.moved) {
       e.preventDefault()
+      scroller.scrollLeft = dragRef.current.startScrollLeft - dx
     }
-
-    scroller.scrollLeft = dragRef.current.startScrollLeft - dx
   }
 
   const endDrag = () => {

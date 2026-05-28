@@ -5,8 +5,9 @@ import { AppShell } from './components/AppShell/AppShell.jsx'
 import { Home } from './pages/Home/Home.jsx'
 import { Accounts } from './pages/Accounts/Accounts.jsx'
 import { Transactions } from './pages/Transactions/Transactions.jsx'
-import { TransactionStats } from './pages/TransactionStats/TransactionStats.jsx'
+import { TransactionStats } from './pages/Transactions/Stats/TransactionStats.jsx'
 import { TransactionFilter } from './pages/TransactionFilter/TransactionFilter.jsx'
+import { TransactionTag } from './pages/TransactionTag/TransactionTag.jsx'
 import { Chat } from './pages/Chat/Chat.jsx'
 import { Settings } from './pages/Settings/Settings.jsx'
 import { Profile } from './pages/Profile/Profile.jsx'
@@ -32,6 +33,7 @@ function App() {
         <Route path="/accounts" element={<Accounts />} />
         <Route path="/transactions/stats" element={<TransactionStats />} />
         <Route path="/transactions/filter" element={<TransactionFilter />} />
+        <Route path="/transactions/tags/:tagId" element={<TransactionTag />} />
         <Route path="/chat" element={<Chat />} />
         <Route path="/profile" element={<Profile />} />
       </Route>

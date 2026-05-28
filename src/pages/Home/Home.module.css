@@ -26,10 +26,28 @@
 .balanceCard {
   position: relative;
   z-index: 1;
+  display: block;
+  width: 100%;
   height: 82px;
+  margin: 0;
+  padding: 0;
+  border: 0;
   border-radius: var(--radius-pill);
   background: var(--color-surface);
   box-shadow: var(--shadow-sm);
+  cursor: pointer;
+  text-align: left;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.2s ease;
+}
+
+.balanceCard:active {
+  transform: scale(0.99);
+}
+
+.balanceCard:focus-visible {
+  outline: 2px solid var(--color-accent-1);
+  outline-offset: 2px;
 }
 
 .balanceInner {

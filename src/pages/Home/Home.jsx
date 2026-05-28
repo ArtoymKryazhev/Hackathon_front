@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import iconChevronDown from '../../assets/icons/icon-chevron-down.svg'
+import iconArrow from '../../assets/icons/icon_arrow.svg'
 import { ChipCarousel } from '../../shared/ui/ChipCarousel/ChipCarousel.jsx'
 import { AiChatWidget } from '../../shared/ui/AiChatWidget/AiChatWidget.jsx'
 import {
@@ -41,6 +41,8 @@ export function Home() {
     return result
   }, [products])
 
+  const goToAccounts = () => navigate('/accounts')
+
   const balance = useMemo(() => {
     const filtered =
       selectedCategoryId === ALL_CATEGORY_ID
@@ -64,7 +66,12 @@ export function Home() {
       <section className={styles.balanceSection} aria-label="Баланс">
         <div className={styles.balanceCardOuter}>
           <div className={styles.balanceInner} aria-hidden="true" />
-          <div className={styles.balanceCard}>
+          <button
+            type="button"
+            className={styles.balanceCard}
+            onClick={goToAccounts}
+            aria-label="Перейти к банковским продуктам"
+          >
             <div className={styles.balanceLabel}>Текущий баланс</div>
             <div className={styles.balanceValue}>{rub.format(balance)}</div>
 
@@ -72,7 +79,7 @@ export function Home() {
               <div className={styles.miniCardTop}>3310</div>
               <div className={styles.miniCardBottom}>МИР</div>
             </div>
-          </div>
+          </button>
         </div>
       </section>
 
@@ -80,10 +87,10 @@ export function Home() {
         <button
           type="button"
           className={styles.downLink}
-          onClick={() => navigate('/accounts')}
+          onClick={goToAccounts}
           aria-label="Перейти к банковским продуктам"
         >
-          <img className={styles.downLinkIcon} alt="" src={iconChevronDown} />
+          <img className={styles.downLinkIcon} alt="" src={iconArrow} />
         </button>
       </div>
 

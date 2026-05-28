@@ -153,4 +153,15 @@ export const MOCK_TRANSACTIONS = [
     operation_date: '2026-05-26T08:00:00.000Z',
     account_number: '**** 8252',
   },
+  {
+    id: 'tx_015',
+    service_name: 'sber',
+    custom_service_name: 'Перевод от друга',
+    category_name: 'Перевод',
+    currency_code: 'RUB',
+    amount: 5000,
+    operation: 'income',
+    operation_date: '2026-05-27T15:20:00.000Z',
+    account_number: '**** 0311',
+  },
 ]

@@ -40,6 +40,7 @@ export const useTransactionsStore = create((set, get) => ({
   monthlySpending: MOCK_MONTHLY_SPENDING,
   payments: MOCK_PAYMENTS,
   transactions: MOCK_TRANSACTIONS,
+  operationType: 'expense',
 
   setMonthlySpending: (data) => {
     set({ monthlySpending: data })
@@ -51,6 +52,12 @@ export const useTransactionsStore = create((set, get) => ({
 
   setTransactions: (items) => {
     set({ transactions: items })
+  },
+
+  setOperationType: (type) => {
+    if (type === 'expense' || type === 'income') {
+      set({ operationType: type })
+    }
   },
 
   sortedPayments: () => {
