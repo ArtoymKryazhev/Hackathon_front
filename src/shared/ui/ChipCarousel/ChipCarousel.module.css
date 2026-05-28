@@ -2,6 +2,12 @@
   width: 100%;
 }
 
+.sticky {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
 .scroller {
   position: relative;
   display: flex;

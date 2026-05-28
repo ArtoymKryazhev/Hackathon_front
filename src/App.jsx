@@ -24,13 +24,13 @@ function App() {
     <Routes>
       <Route element={<WithBottomNavLayout />}>
         <Route path="/" element={<Home />} />
-        <Route path="/accounts" element={<Accounts />} />
         <Route path="/transactions" element={<Transactions />} />
         <Route path="/transactions/stats" element={<TransactionStats />} />
         <Route path="/settings" element={<Settings />} />
       </Route>
 
       <Route element={<NoBottomNavLayout />}>
+        <Route path="/accounts" element={<Accounts />} />
         <Route path="/transactions/filter" element={<TransactionFilter />} />
         <Route path="/chat" element={<Chat />} />
         <Route path="/profile" element={<Profile />} />

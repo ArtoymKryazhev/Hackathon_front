@@ -10,6 +10,8 @@ export function ChipCarousel({
   onSelect,
   getLabel,
   className,
+  mode = 'filter',
+  sticky = false,
 }) {
   const scrollerRef = useRef(null)
   const indicatorRef = useRef(null)
@@ -24,6 +26,9 @@ export function ChipCarousel({
     justDragged: false,
   })
   const [isDragging, setIsDragging] = useState(false)
+  const [activeAnchorId, setActiveAnchorId] = useState(
+    mode === 'anchor' ? (activeId ?? (items?.[0] ? (typeof items[0] === 'string' ? items[0] : items[0].id) : undefined)) : undefined,
+  )
 
   const ids = useMemo(
     () => items.map((item) => (typeof item === 'string' ? item : item.id)),
@@ -53,10 +58,10 @@ export function ChipCarousel({
   }
 
   useLayoutEffect(() => {
-    activeIdRef.current = activeId
+    activeIdRef.current = mode === 'anchor' ? activeAnchorId : activeId
     updateIndicator()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeId, ids.join('|')])
+  }, [activeId, activeAnchorId, ids.join('|'), mode])
 
   useEffect(() => {
     const scroller = scrollerRef.current
@@ -131,7 +136,11 @@ export function ChipCarousel({
   }
 
   return (
-    <div className={[styles.root, className].filter(Boolean).join(' ')}>
+    <div
+      className={[styles.root, sticky ? styles.sticky : null, className]
+        .filter(Boolean)
+        .join(' ')}
+    >
       <div
         ref={scrollerRef}
         className={[
@@ -159,13 +168,37 @@ export function ChipCarousel({
                 ? item
                 : item.label
 
-          const isActive = id === activeId
+          const isActive = id === (mode === 'anchor' ? activeAnchorId : activeId)
+
+          const handleClick =
+            mode === 'anchor'
+              ? () => {
+                  setActiveAnchorId(id)
+                  const target =
+                    document.getElementById(`anchor-${id}`) ||
+                    document.querySelector(`[data-anchor="${id}"]`)
+                  if (!target) return
+
+                  const header = scrollerRef.current?.closest('header')
+                  const headerOffset = header
+                    ? header.getBoundingClientRect().height
+                    : 0
+
+                  const y =
+                    target.getBoundingClientRect().top +
+                    window.scrollY -
+                    headerOffset -
+                    2
+
+                  window.scrollTo({ top: y, behavior: 'smooth' })
+                }
+              : () => onSelect?.(id)
 
           return (
             <Chip
               key={id}
               active={isActive}
-              onClick={() => onSelect?.(id)}
+              onClick={handleClick}
               variant="carousel"
               size="md"
               aria-pressed={isActive}
