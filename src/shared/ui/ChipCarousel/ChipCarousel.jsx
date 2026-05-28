@@ -1,5 +1,6 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 
+import { useDragScroll } from '../../../lib/hooks/useDragScroll.js'
 import { Chip } from '../Chip/Chip.jsx'
 
 import styles from './ChipCarousel.module.css'
@@ -13,19 +14,10 @@ export function ChipCarousel({
   mode = 'filter',
   sticky = false,
 }) {
-  const scrollerRef = useRef(null)
   const indicatorRef = useRef(null)
   const itemRefs = useRef(new Map())
   const activeIdRef = useRef(activeId)
-  const dragRef = useRef({
-    isDown: false,
-    pointerId: null,
-    startX: 0,
-    startScrollLeft: 0,
-    moved: false,
-    justDragged: false,
-  })
-  const [isDragging, setIsDragging] = useState(false)
+  const { scrollerRef, isDragging, dragHandlers } = useDragScroll()
   const [activeAnchorId, setActiveAnchorId] = useState(
     mode === 'anchor' ? (activeId ?? (items?.[0] ? (typeof items[0] === 'string' ? items[0] : items[0].id) : undefined)) : undefined,
   )
@@ -79,62 +71,6 @@ export function ChipCarousel({
     }
   }, [])
 
-  const onPointerDown = (e) => {
-    const scroller = scrollerRef.current
-    if (!scroller) return
-    if (e.button !== undefined && e.button !== 0) return
-
-    dragRef.current.isDown = true
-    dragRef.current.pointerId = e.pointerId
-    dragRef.current.startX = e.clientX
-    dragRef.current.startScrollLeft = scroller.scrollLeft
-    dragRef.current.moved = false
-    dragRef.current.justDragged = false
-    setIsDragging(false)
-  }
-
-  const onPointerMove = (e) => {
-    const scroller = scrollerRef.current
-    if (!scroller) return
-    if (!dragRef.current.isDown) return
-
-    const dx = e.clientX - dragRef.current.startX
-    // Start drag only after noticeable move; until then allow normal clicks.
-    if (!dragRef.current.moved) {
-      if (Math.abs(dx) < 12) return
-      dragRef.current.moved = true
-      setIsDragging(true)
-      scroller.setPointerCapture?.(dragRef.current.pointerId)
-    }
-
-    scroller.scrollLeft = dragRef.current.startScrollLeft - dx
-  }
-
-  const endDrag = () => {
-    const scroller = scrollerRef.current
-    if (!scroller) return
-    if (!dragRef.current.isDown) return
-
-    dragRef.current.isDown = false
-    dragRef.current.justDragged = dragRef.current.moved
-    setIsDragging(false)
-
-    if (dragRef.current.justDragged) {
-      window.setTimeout(() => {
-        dragRef.current.justDragged = false
-      }, 50)
-    }
-
-    scroller.releasePointerCapture?.(dragRef.current.pointerId)
-    dragRef.current.pointerId = null
-  }
-
-  const onClickCapture = (e) => {
-    if (!dragRef.current.justDragged) return
-    e.preventDefault()
-    e.stopPropagation()
-  }
-
   return (
     <div
       className={[styles.root, sticky ? styles.sticky : null, className]
@@ -151,11 +87,7 @@ export function ChipCarousel({
           .join(' ')}
         role="tablist"
         aria-label="Категории"
-        onPointerDown={onPointerDown}
-        onPointerMove={onPointerMove}
-        onPointerUp={endDrag}
-        onPointerCancel={endDrag}
-        onClickCapture={onClickCapture}
+        {...dragHandlers}
       >
         <div ref={indicatorRef} className={styles.activePill} aria-hidden="true" />
 
