@@ -1,68 +1,78 @@
 # current_status.md
 
 ## Последнее обновление
-28 мая 2026
+29 мая 2026
 
-## Что сделано
-- [x] **Скелет React + Vite** (JavaScript) + базовые глобальные стили
-- [x] **Роутинг** (react-router-dom) и раскладка через `AppShell`
-- [x] **Home** по Figma (814:1013): карусель категорий, блок баланса, заголовок, чат-виджет
-- [x] **Accounts** по Figma (814:1381): общий баланс, секции продуктов, якорная навигация
-- [x] **Transactions** по Figma (814:1087): траты за месяц, платежи, фильтры/аналитика, список транзакций
-- [x] **TransactionStats** (`/transactions/stats`) по Figma: donut recharts, переключатель расходы/доходы, карусель тегов, блок «В этом месяце»
-- [x] **DonutChartCard** + `calcTransactionStats`: группировка по категориям, мин. размер сегмента на графике (~5.5%), легенда с реальными суммами
-- [x] **CategoryFolderCard** — кнопки → `/transactions/tags/:tagId`
-- [x] **TransactionTag** — заглушка категории по id (под будущий API)
-- [x] **BottomNav**, design tokens, **useDragScroll**
-- [x] **shared/ui**: Chip, ChipCarousel, AiChatWidget, BackButton, ProductCard, MonthlySpendingCard, PaymentCard, TransactionItem, DonutChartCard, CategoryFolderCard, CategorySummaryCard
-- [x] **zustand**: `useAccountsStore`, `useTransactionsStore` (+ `operationType`)
-- [x] **Моки**: `bankProducts`, `payments`, `transactions`, `monthlySpending`, `tags`
-- [x] Линт и сборка: `npm run lint`, `npm run build`
+## Что сделано (с последнего коммита `2437a38`)
+
+### API-слой и авторизация
+- [x] **Vite dev proxy** → `https://cashapps.ru`
+  - `/api/auth/*` — rewrite: срезает `/api` → `/auth/*` на бэке
+  - `/api/*` (остальное) — без rewrite → `/api/*` на бэке
+- [x] **`src/lib/api/auth.js`** — токены в module-level памяти (не localStorage, не zustand)
+  - `getTokens()` → `POST /api/auth/access/` с `{}`
+  - `refreshTokens()` → `POST /api/auth/refresh/` (отдельный `authClient` без интерцепторов)
+  - поддержка ключей `access_token` / `access` в ответах
+- [x] **`src/lib/api/axiosInstance.js`** — `apiClient` с Bearer и auto-refresh при `"Access token expired"`
+- [x] **`src/stores/useAuthStore.js`** — `fetchUser()`, `clearUser()`; `user` из ответа логина (без `get_user_profile`)
+- [x] **`src/lib/api/products.js`** — `getProducts()` → `GET /api/products/` (Bearer обязателен)
+- [x] **`useAccountsStore.fetchProducts()`** — один запрос при старте; при ошибке/пустом ответе — fallback на моки
+- [x] **`AppShell`** — цепочка `fetchUser` → `fetchProducts` при монтировании; экраны загрузки/ошибки auth
+
+### UI (без изменений с прошлого коммита)
+- [x] Home, Accounts, Transactions, TransactionStats, BottomNav, shared/ui, моки транзакций
 
 ## В процессе
+- [ ] **Mapper продуктов** — формат ответа `GET /api/products/` может не совпадать с полями моков (`product_type`, `amount`, …)
 - [ ] Тонкие визуальные правки Home / Transactions (иконки сервисов, кэшбэк в списке)
 
 ## Осталось (до хакатона)
 - [ ] Реальная логика фильтров (`/transactions/filter`)
 - [ ] Контент страницы тега (`/transactions/tags/:tagId`) — список операций по tagId
-- [ ] API слой (axios) — когда будет готов бэк/контракт
+- [ ] API: транзакции, платежи, теги (products — foundation готов)
 - [ ] Иконки банков/сервисов в PaymentCard и TransactionItem
 
 ## На хакатоне
-- [ ] Интеграция с бэкендом (axios): продукты, транзакции, платежи, теги
+- [ ] Полная интеграция с бэкендом (транзакции, платежи, теги)
 - [ ] Развитие чата (сохранение текста вопроса, реальная логика)
 - [ ] Доп. экраны: цели/накопления/импорт (PDF/QR) — если успеем
 
 ## Известные проблемы
-- ESLint warning в `ChipCarousel` (exhaustive-deps) — не блокирует сборку
+- ESLint warning в `ChipCarousel`, `AppShell` (exhaustive-deps) — не блокирует сборку
 - Доли на donut — визуальные (мин. сегмент), в легенде — фактические суммы
+- В dev React StrictMode — двойной вызов `fetchUser` / `fetchProducts`
+- Refresh-ответ бэка: ключи `access`/`refresh` vs `access_token`/`refresh_token` — частично обработано через `??`
+- `GET /auth/get_user_profile/` не используется (эндпоинт на бэке не задействован)
 
 ## Стек
-React + Vite | JavaScript | CSS Modules | zustand | recharts | axios (в планах) | react-router-dom
+React + Vite | JavaScript | CSS Modules | zustand | recharts | **axios** | react-router-dom
 
-## Ограничения
-- Без TypeScript, Tailwind, Redux, React Query, Next.js
+## Бэкенд (актуально)
+- **Base URL:** `https://cashapps.ru`
+- **Auth:** `POST /auth/access/` → `{ access_token, refresh_token, user }`
+- **Refresh:** `POST /auth/refresh/` → `{ access, refresh }` (или `access_token`, `refresh_token`)
+- **Products:** `GET /api/products/` + `Authorization: Bearer <token>`
 
 ## Ключевые сущности
+- **API:** `src/lib/api/` — `auth.js`, `axiosInstance.js`, `products.js`
+- **Сторы:** `useAuthStore`, `useAccountsStore` (+ `fetchProducts`), `useTransactionsStore`
+- **Старт приложения:** `AppShell` → auth → products → `<Outlet />`
 - **Роутинг** (`src/App.jsx`):
   - С BottomNav: `/`, `/transactions`, `/settings`
   - Без BottomNav: `/accounts`, `/transactions/stats`, `/transactions/filter`, `/transactions/tags/:tagId`, `/chat`, `/profile`
-- **Аналитика**: `src/pages/Transactions/Stats/TransactionStats.jsx`
-- **Утилиты**: `calcTransactionStats.js` — `chartData`, `summaryData`, `applyMinimumChartSegmentPercents`
-- **Стор**: `useTransactionsStore` — `operationType`, `setOperationType`; селекторы `sortedPayments()` / `groupedTransactions()` — не в подписке zustand, только `useMemo` на странице
 
 ## Состояние страниц
 | Страница | Роут | Статус |
 |----------|------|--------|
-| Home | `/` | ✅ |
-| Accounts | `/accounts` | ✅ |
-| Transactions | `/transactions` | ✅ |
+| Home | `/` | ✅ UI; продукты из store (API + fallback моки) |
+| Accounts | `/accounts` | ✅ UI; продукты из store |
+| Transactions | `/transactions` | ✅ моки |
 | TransactionStats | `/transactions/stats` | ✅ UI + recharts |
 | TransactionFilter | `/transactions/filter` | 🔶 заглушка |
 | TransactionTag | `/transactions/tags/:tagId` | 🔶 заглушка |
 | Settings, Chat, Profile | … | 🔶 заглушки |
 
 ## Следующий этап
-1. **Фильтры** — форма/чипы на `/transactions/filter`
-2. **Тег** — операции по `tagId` после API
-3. **API** — axios вместо моков
+1. **Mapper products** — привести ответ API к полям UI (`product_type`, `amount`, …)
+2. **Фильтры** — `/transactions/filter`
+3. **API транзакций/платежей** — замена моков в `useTransactionsStore`

@@ -20,6 +20,49 @@ const buildCategorySetFromProducts = (products) => {
 export const useAccountsStore = create((set, get) => ({
   products: bankProducts,
   selectedCategoryId: ALL_CATEGORY_ID,
+  productsLoading: false,
+  productsLoaded: false,
+  productsError: null,
+
+  fetchProducts: async () => {
+    const { productsLoaded, productsLoading } = get()
+    if (productsLoaded || productsLoading) return
+
+    set({ productsLoading: true, productsError: null })
+
+    try {
+      const { getProducts } = await import('../lib/api/products.js')
+      const items = await getProducts()
+
+      if (items.length > 0) {
+        set({
+          products: items,
+          productsLoading: false,
+          productsLoaded: true,
+          productsError: null,
+        })
+        return
+      }
+
+      set({
+        productsLoading: false,
+        productsLoaded: true,
+        productsError: null,
+      })
+    } catch (err) {
+      const message =
+        err.response?.data?.message ||
+        err.response?.data?.error ||
+        err.message ||
+        'Failed to fetch products'
+
+      set({
+        productsLoading: false,
+        productsLoaded: true,
+        productsError: message,
+      })
+    }
+  },
 
   setSelectedCategory: (id) => {
     set({ selectedCategoryId: id || ALL_CATEGORY_ID })
