@@ -175,7 +175,6 @@
   flex-shrink: 0;
 }
 
-.categoriesSection,
 .summarySection {
   display: flex;
   flex-direction: column;
@@ -192,41 +191,6 @@
   font-weight: var(--font-weight-medium);
   line-height: var(--line-height-normal);
   color: var(--color-text-primary);
-}
-
-.foldersScroller {
-  display: flex;
-  gap: var(--space-32);
-  overflow-x: auto;
-  overflow-y: hidden;
-  -webkit-overflow-scrolling: touch;
-  scroll-snap-type: x proximity;
-  scroll-behavior: smooth;
-  scrollbar-width: none;
-  cursor: grab;
-  touch-action: pan-x pan-y;
-  padding: var(--space-8) var(--space-6) var(--space-4);
-  margin: 0 calc(var(--space-6) * -1);
-}
-
-.foldersScrollerDragging {
-  cursor: grabbing;
-  scroll-snap-type: none;
-  user-select: none;
-}
-
-.foldersScrollerDragging > * {
-  scroll-snap-align: none;
-}
-
-.foldersScroller > * {
-  scroll-snap-align: start;
-  flex-shrink: 0;
-}
-
-.foldersScroller::-webkit-scrollbar {
-  width: 0;
-  height: 0;
 }
 
 .summaryList {

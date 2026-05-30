@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 
 import styles from './BackButton.module.css'
 
-export function BackButton({ onClick }) {
+export function BackButton({ onClick, variant = 'default' }) {
   const navigate = useNavigate()
 
   const handleClick = () => {
@@ -14,7 +14,14 @@ export function BackButton({ onClick }) {
   return (
     <button
       type="button"
-      className={styles.root}
+      className={[
+        styles.root,
+        variant === 'onDark' ? styles.rootOnDark : null,
+        variant === 'ghostOnDark' ? styles.rootGhostOnDark : null,
+        variant === 'card' ? styles.rootCard : null,
+      ]
+        .filter(Boolean)
+        .join(' ')}
       aria-label="Назад"
       onClick={handleClick}
     >

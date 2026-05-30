@@ -36,3 +36,38 @@
   outline-offset: 2px;
 }
 
+.rootOnDark {
+  background: var(--color-surface);
+  border-color: var(--color-border);
+  box-shadow: var(--shadow-sm);
+}
+
+.rootOnDark .icon {
+  color: var(--color-text-primary);
+}
+
+.rootOnDark:focus-visible {
+  outline-color: var(--color-on-accent);
+}
+
+.rootGhostOnDark {
+  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.32);
+  box-shadow: none;
+}
+
+.rootGhostOnDark .icon {
+  color: var(--color-on-accent);
+}
+
+.rootGhostOnDark:focus-visible {
+  outline-color: var(--color-on-accent);
+}
+
+/* Figma 1038:60 — как default BackButton, фон #FFF и border #E2E2E2 */
+.root.rootCard {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-sm);
+}
+

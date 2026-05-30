@@ -5,6 +5,20 @@
 
 ## Что сделано недавно
 
+### TransactionCategory (`/transactions/categories/:categoryKey`) — Figma `1038:60`
+- [x] **Новая страница** — `src/pages/Transactions/Category/TransactionCategory.jsx`
+- [x] **Роут** — `App.jsx`, layout без BottomNav
+- [x] **Hero** — gradient-карточка: pill «Назад» (`BackButton variant="card"`, белый `#FFF`, border `#E2E2E2`) + заголовок и сумма в одном ряду
+- [x] **Данные** — фильтр по `category_name` через `filterTransactionsByCategory` + `operationType` из store; сумма `amount` в `useMemo`
+- [x] **Список** — `TransactionItem` (иконка сервиса — заглушка)
+- [x] **Чипы** — фильтр-иконка + «Счета и карты», «Даты» (dropdown TEMP), «Пополнения», «Переводы», «Всё»; горизонтальный скролл (`useDragScroll`), фильтр в одной карусели с чипами
+- [x] **Навигация со stats** — `CategorySummaryCard` кликабелен → `getCategoryRoutePath(category_name)`
+
+### TransactionStats (`/transactions/stats`) — упрощение
+- [x] Убран блок «Категории» и `CategoryFolderCard` (папки по тегам)
+- [x] Оставлены: donut, plan-карточка, секция «В этом месяце» с `CategorySummaryCard`
+- [x] **DonutChartCard** — подправлены легенда (gap, точки 11px) и толщина сегментов
+
 ### Global Action Menu (кнопка «+» в BottomNav)
 - [x] **Инфраструктура** — `useActionMenuStore`, `ActionMenu` в `AppShell` (портал), открытие из BottomNav
 - [x] **UI по Figma** (`1033:8` / `817:1524`) — frosted-glass карточка 354px, иконка + текст, разделитель `#DBDBDB`
@@ -15,36 +29,28 @@
 
 ### Chat (`/chat`) и история (`/chat/history`)
 - [x] **Chat** — шапка, сообщения из `chatMocks.js`, actions, quick questions, input TEMP
-- [x] **Chat** — автопрокрутка ленты вниз при открытии и при изменении `messages` (`scrollTop` на `.messages`)
-- [x] **Иконка отправки** — `icons_send_massage.svg` в Chat и `AiChatWidget` (логика send — TEMP)
+- [x] **Chat** — автопрокрутка ленты вниз при открытии и при изменении `messages`
+- [x] **Иконка отправки** — `icons_send_massage.svg` в Chat и `AiChatWidget`
 - [x] **ChatHistory** — секции из моков, навигация
 - [x] **BackButton** в шапках Chat и ChatHistory
 
-### UI / страницы (последняя сессия)
-
-### Transactions (`/transactions`) — редизайн по Figma `814:1087`
-- [x] **Новая структура экрана** — карточка «Траты в этом месяце» (клик → `/transactions/stats`), donut «Уровень долговой нагрузки», кнопка «Спросить в чате», две info-строки (заглушки)
-- [x] **DonutChartCard** — debt-вариант: `centerText`, `hideLegendAmounts`, `legendFooter`; проценты в легенде; pill «Уровень / Оптимальный»; моки 75/25 в `Transactions.jsx`
-- [x] **Кнопка чата** — градиентная обводка `#5C03BC` → `#E536AB`, иконка `icon_arrow-up-right.svg`
-- [x] Старый список транзакций / платежей / фильтры на `/transactions` убраны (данные остаются в store для `/transactions/stats`)
+### Transactions (`/transactions`) — dashboard Figma `814:1087`
+- [x] Карточка «Траты в этом месяце» → `/transactions/stats`; debt donut; «Спросить в чате»; info-строки (заглушки)
 
 ### Ранее (UI)
-- [x] **GlassSelect** — кастомный select (валюта, банк) в ProductEdit; портал, glass-стиль по Figma
-- [x] **Home** — без вертикального скролла страницы (`overflow: hidden`, `contentNoScroll` в AppShell на `/`)
-
-### Ранее
-- [x] ProductEdit, Accounts, иконки банков, TEMP client-side CRUD
-- [x] Home, Transactions, TransactionStats, AppShell, auth/products API
+- [x] **GlassSelect**, **Home** без скролла страницы, ProductEdit, Accounts, TEMP CRUD, auth/products API
 
 ## В процессе
 - [ ] **Разные наполнения меню по экранам** — архитектура готова; финальные пункты после согласования с дизайном
 - [ ] **Mapper продуктов** — формат `GET /api/products/` vs поля UI
 - [ ] **Backend CRUD продуктов** — заменить TEMP save/delete
+- [ ] **TransactionCategory** — логика чипов-фильтров и dropdown «Даты»
 
 ## Осталось (до хакатона)
-- [ ] Реальные `actionKey` → навигация / API (новая трата, выписка, цель, …)
+- [ ] Реальные `actionKey` → навигация / API
 - [ ] Реальная отправка сообщений и AI в Chat
-- [ ] Фильтры (`/transactions/filter`), тег (`/transactions/tags/:tagId`)
+- [ ] **TransactionFilter** — UI + фильтры в store
+- [ ] **TransactionTag** — заглушка (`/transactions/tags/:tagId`, теги из `MOCK_TAGS` — не путать с категориями транзакций)
 - [ ] API: транзакции, платежи, теги
 - [ ] Иконки сервисов в PaymentCard и TransactionItem
 
@@ -61,34 +67,29 @@ React + Vite | JavaScript | CSS Modules | zustand | recharts | axios | react-rou
 - **Base URL:** `https://cashapps.ru`
 - **Auth:** `POST /auth/access/` | **Products:** `GET /api/products/` + Bearer
 
-## Ключевые сущности (action menu)
-- **Store:** `useActionMenuStore` — `isOpen`, `open`, `close`
-- **UI:** `src/components/ActionMenu/`
-- **Конфиг:** `src/lib/actionMenu/actionMenuPresets.js`, `actionMenuRouteMap.js`
-- **Handlers:** `src/lib/actionMenu/actionMenuHandlers.js` (заглушки)
-
 ## Роутинг
 - С BottomNav: `/`, `/transactions`, `/settings` (+ action menu через «+»)
-- Без BottomNav: `/accounts`, `/products/:id`, `/transactions/stats`, …, `/chat`, `/chat/history`, `/profile`
-- `ActionMenu` монтируется в `AppShell` на всех layout; «+» только где есть BottomNav
+- Без BottomNav: `/accounts`, `/products/:id`, `/transactions/stats`, `/transactions/categories/:categoryKey`, `/transactions/filter`, `/transactions/tags/:tagId`, `/chat`, `/chat/history`, `/profile`
 
 ## Состояние страниц
 | Страница | Роут | Статус |
 |----------|------|--------|
 | Home | `/` | ✅ + action menu |
-| Transactions | `/transactions` | ✅ dashboard по Figma 814:1087; action menu через «+» |
+| Transactions | `/transactions` | ✅ dashboard 814:1087 |
+| TransactionStats | `/transactions/stats` | ✅ donut + «В этом месяце» → category |
+| TransactionCategory | `/transactions/categories/:categoryKey` | ✅ UI, моки, чипы TEMP |
 | Settings | `/settings` | 🔶 заглушка + action menu |
 | Accounts | `/accounts` | ✅ |
 | ProductEdit | `/products/:id` | ✅ TEMP CRUD |
-| TransactionStats | `/transactions/stats` | ✅ |
-| Chat | `/chat` | ✅ UI, скролл вниз, иконка send |
-| ChatHistory | `/chat/history` | ✅ UI + навигация |
+| Chat | `/chat` | ✅ UI |
+| ChatHistory | `/chat/history` | ✅ UI |
 | TransactionFilter | `/transactions/filter` | 🔶 заглушка |
-| TransactionTag | `/transactions/tags/:tagId` | 🔶 заглушка |
+| TransactionTag | `/transactions/tags/:tagId` | 🔶 заглушка (теги, не category_name) |
 | Profile | `/profile` | 🔶 заглушка |
 
 ## Следующий этап
-1. Action menu: финальные пункты по экранам + реальные handlers
-2. Chat: отправка + backend/AI
-3. Mapper products + backend CRUD
-4. API транзакций/платежей
+1. TransactionCategory: рабочие фильтры чипов + dropdown «Даты»
+2. Action menu: финальные пункты + handlers
+3. Chat: отправка + backend/AI
+4. Mapper products + backend CRUD
+5. API транзакций/платежей

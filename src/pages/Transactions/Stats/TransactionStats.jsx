@@ -4,13 +4,13 @@ import { Link, useNavigate } from 'react-router-dom'
 import iconMenu from '../../../assets/icons/icon-menu.svg'
 import iconArrowRight from '../../../assets/icons/icon_arrow_right.svg'
 import iconHackcashAi from '../../../assets/icons/icon_hackcash_ai.svg'
-import { useDragScroll } from '../../../lib/hooks/useDragScroll.js'
-import { calcTransactionStats } from '../../../lib/utils/calcTransactionStats.js'
-import { MOCK_TAGS } from '../../../lib/mocks/tags.js'
+import {
+  calcTransactionStats,
+  getCategoryRoutePath,
+} from '../../../lib/utils/calcTransactionStats.js'
 import { useTransactionsStore } from '../../../stores/useTransactionsStore.js'
 import { BackButton } from '../../../shared/ui/BackButton/BackButton.jsx'
 import { DonutChartCard } from '../../../shared/ui/DonutChartCard/DonutChartCard.jsx'
-import { CategoryFolderCard } from '../../../shared/ui/CategoryFolderCard/CategoryFolderCard.jsx'
 import { CategorySummaryCard } from '../../../shared/ui/CategorySummaryCard/CategorySummaryCard.jsx'
 
 import styles from './TransactionStats.module.css'
@@ -30,20 +30,8 @@ const MONTH_LABELS = [
   'Декабрь',
 ]
 
-const FOLDER_COLORS = [
-  '#004385',
-  '#033860',
-  '#133C55',
-  '#33658A',
-  '#386FA4',
-  '#59A5D8',
-  '#05B2DC',
-  '#84D2F6',
-]
-
 export function TransactionStats() {
   const navigate = useNavigate()
-  const { scrollerRef, isDragging, dragHandlers } = useDragScroll()
 
   const transactions = useTransactionsStore((s) => s.transactions)
   const operationType = useTransactionsStore((s) => s.operationType)
@@ -129,38 +117,19 @@ export function TransactionStats() {
           <img className={styles.planArrow} src={iconArrowRight} alt="" aria-hidden="true" />
         </button>
 
-        <section className={styles.categoriesSection} aria-labelledby="categories-heading">
-          <h2 id="categories-heading" className={styles.sectionTitle}>
-            Категории
-          </h2>
-          <div
-            ref={scrollerRef}
-            className={[
-              styles.foldersScroller,
-              isDragging ? styles.foldersScrollerDragging : null,
-            ]
-              .filter(Boolean)
-              .join(' ')}
-            {...dragHandlers}
-          >
-            {MOCK_TAGS.map((tag, index) => (
-              <CategoryFolderCard
-                key={tag.id}
-                tag={tag}
-                color={FOLDER_COLORS[index % FOLDER_COLORS.length]}
-                onClick={() => navigate(`/transactions/tags/${tag.id}`)}
-              />
-            ))}
-          </div>
-        </section>
-
         <section className={styles.summarySection} aria-labelledby="summary-heading">
           <h2 id="summary-heading" className={styles.sectionTitle}>
             В этом месяце
           </h2>
           <div className={styles.summaryList}>
             {stats.summaryData.map((category) => (
-              <CategorySummaryCard key={category.category_name} category={category} />
+              <CategorySummaryCard
+                key={category.category_name}
+                category={category}
+                onClick={() =>
+                  navigate(getCategoryRoutePath(category.category_name))
+                }
+              />
             ))}
           </div>
         </section>

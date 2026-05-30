@@ -39,6 +39,12 @@ store → useMemo + утилиты → props в shared/ui
 - **TransactionStats** — суммы в центре и легенде (`totalAmount`, `monthLabel`)
 - **Debt-вариант** (Transactions): `centerText`, `hideLegendAmounts`, `legendFooter` — не ломать props при правках stats
 
+## Транзакции / категории
+- Группировка по `category_name` — `calcTransactionStats.js` (`filterTransactionsByCategory`, `getCategoryRoutePath`)
+- **TransactionStats** — список «В этом месяце»; клик по `CategorySummaryCard` → `/transactions/categories/:categoryKey`
+- **TransactionCategory** (`1038:60`) — hero gradient + `BackButton variant="card"` (pill белый); чипы-фильтры TEMP; `TransactionItem`
+- **BackButton** — `variant="card"` только для кнопки на gradient-карточке категории
+
 ## Zustand anti-pattern
 НЕ создавать вычисляемые массивы как геттеры в store (sortedX, groupedX) —
 вызывают лишние ре-рендеры.

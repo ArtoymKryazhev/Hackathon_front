@@ -10,7 +10,7 @@ const PIE_CENTER = CHART_SIZE / 2
 const CENTER_DISC_RADIUS = 41
 const RING_GAP = 7
 const INNER_RADIUS = CENTER_DISC_RADIUS + RING_GAP
-const OUTER_RADIUS = 63
+const OUTER_RADIUS = 65
 const RING_THICKNESS = OUTER_RADIUS - INNER_RADIUS
 /** Долговая нагрузка — Figma 814:1087 / 996:563 */
 const DEBT_INNER_RADIUS = 50
@@ -135,7 +135,7 @@ export function DonutChartCard({
                     className={[styles.legendDot, isDebtVariant ? styles.legendDotDebt : null]
                       .filter(Boolean)
                       .join(' ')}
-                    viewBox="0 0 15 15"
+                    viewBox={isDebtVariant ? '0 0 15 15' : '0 0 11 11'}
                     width={isDebtVariant ? 15 : 11}
                     height={isDebtVariant ? 15 : 11}
                     aria-hidden="true"

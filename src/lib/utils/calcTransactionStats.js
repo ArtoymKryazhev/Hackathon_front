@@ -19,6 +19,28 @@ const getCategoryName = (tx) => {
   return String(name)
 }
 
+export function getCategoryRoutePath(categoryName) {
+  return `/transactions/categories/${encodeURIComponent(categoryName)}`
+}
+
+export function decodeCategoryRouteParam(categoryKey) {
+  if (categoryKey == null || categoryKey === '') return ''
+  try {
+    return decodeURIComponent(categoryKey)
+  } catch {
+    return categoryKey
+  }
+}
+
+export function filterTransactionsByCategory(transactions, categoryName, operationType) {
+  if (!categoryName) return []
+
+  return (transactions ?? []).filter(
+    (tx) =>
+      tx.operation === operationType && getCategoryName(tx) === categoryName,
+  )
+}
+
 /**
  * Метод наибольших остатков: percent в сумме ровно 100.0, шаг 0.1%.
  */

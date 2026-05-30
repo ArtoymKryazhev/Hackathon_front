@@ -9,9 +9,10 @@
 | Home / меню | `/` | ✅ + action menu |
 | Банковские продукты | `/accounts` | ✅ |
 | Редактирование продукта | `/products/:id` | ✅ TEMP save/delete |
-| Транзакции (dashboard) | `/transactions` | ✅ Figma 814:1087; donut, info-карточки |
-| Аналитика / список операций | `/transactions/stats` | ✅ donut, категории, моки store |
-| Чат Cash Ask | `/chat` | ✅ UI, моки, скролл вниз при открытии |
+| Транзакции (dashboard) | `/transactions` | ✅ Figma 814:1087 |
+| Аналитика | `/transactions/stats` | ✅ donut + список категорий |
+| Категория транзакций | `/transactions/categories/:categoryKey` | ✅ Figma 1038:60 |
+| Чат Cash Ask | `/chat` | ✅ UI, моки |
 | История чатов | `/chat/history` | ✅ UI |
 | Фильтры / тег / settings / profile | … | 🔶 заглушки |
 
@@ -24,23 +25,18 @@ React + Vite, JavaScript, CSS Modules, zustand, react-router-dom, recharts, axio
 - **Products:** `GET /api/products/`; CRUD — пока на фронте (TEMP)
 
 ## Структура кода
-- `src/pages/` — экраны
-- `src/components/` — AppShell, BottomNav, **ActionMenu**
-- `src/shared/ui/` — ProductCard, BackButton, **GlassSelect**, **DonutChartCard**, AiChatWidget, TransactionItem, …
-- `src/lib/actionMenu/` — presets, route map, handlers, hooks
-- `src/stores/` — auth, accounts, transactions, **useActionMenuStore**
-- `src/assets/icons/modal_menu/` — иконки пунктов action menu
+- `src/pages/Transactions/` — `Transactions.jsx`, `Stats/`, `Category/`
+- `src/components/` — AppShell, BottomNav, ActionMenu
+- `src/shared/ui/` — ProductCard, BackButton (`variant="card"`), GlassSelect, DonutChartCard, CategorySummaryCard, TransactionItem, …
+- `src/lib/utils/calcTransactionStats.js` — stats, фильтр и URL категории
+- `src/stores/` — auth, accounts, transactions, useActionMenuStore
 
-## Поток данных
+## Поток данных (транзакции)
 ```
-AppShell → fetchUser → fetchProducts → Outlet
-         → ActionMenu (портал, zustand isOpen)
-
-BottomNav «+» → useActionMenuStore.open()
-ActionMenu → getActionMenuItems(pathname) → пункты → handlers (заглушки)
-
-Accounts → ProductEdit → TEMP save/delete → useAccountsStore
-Chat: chatMocks + useState (TEMP)
+useTransactionsStore (моки)
+  → calcTransactionStats (stats page)
+  → CategorySummaryCard onClick → /transactions/categories/:categoryKey
+  → filterTransactionsByCategory + TransactionItem
 ```
 
 Подробный статус — `.notes/current_status.md`.

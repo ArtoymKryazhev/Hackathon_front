@@ -3,9 +3,28 @@
   grid-template-columns: 50px 1fr auto;
   align-items: center;
   column-gap: 22px;
+  width: 100%;
   min-height: 62px;
+  margin: 0;
   padding: 6px 0;
+  border: 0;
+  background: transparent;
+  font: inherit;
+  text-align: inherit;
+  color: inherit;
   box-sizing: border-box;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.root:active {
+  opacity: 0.92;
+}
+
+.root:focus-visible {
+  outline: 2px solid var(--color-accent-1);
+  outline-offset: 2px;
+  border-radius: var(--radius-md);
 }
 
 .iconPlaceholder {
