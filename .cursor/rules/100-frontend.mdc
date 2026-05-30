@@ -43,7 +43,7 @@ Mapper: `lib/products/mapApiProductToClient.js`, `lib/operations/mapApiOperation
 ## API и прокси
 - Клиент: `apiClient` с `baseURL: '/api'` (`src/lib/api/axiosInstance.js`)
 - **Локально:** Vite proxy в `vite.config.js` → `https://cashapps.ru`
-- **Docker prod:** nginx в `nginx.conf` — те же правила (`/api/auth` → `/auth`, `/api/chat` → `/chat`, остальное `/api`)
+- **Docker prod:** nginx в `nginx.conf` — `/api/auth` и остальное `/api` без rewrite; `/api/chat` → `/chat`
 - Auth — отдельный `authClient` (`auth.js`), токены только в памяти
 
 ## DonutChartCard

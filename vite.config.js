@@ -6,11 +6,7 @@ export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
-      '/api/auth': {
-        target: 'https://cashapps.ru',
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, ''),
-      },
+      // auth: POST /api/auth/access/ — без rewrite (на /auth/access/ бэкенд отвечает 405)
       '/api/chat': {
         target: 'https://cashapps.ru',
         changeOrigin: true,
