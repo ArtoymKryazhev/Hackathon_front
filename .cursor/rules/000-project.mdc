@@ -23,7 +23,7 @@ Mobile-first. Аудитория — люди без финансовой экс
 - src/lib/api/        — axios-функции (не src/api/)
 - src/lib/mocks|utils|constants|hooks — данные и вспомогательная логика
 - Chat/ChatHistory — UI на моках (`chatMocks.js`), без API; TEMP до AI/backend
-- ActionMenu — глобальное меню по «+» в BottomNav; конфиг в `lib/actionMenu/`; handlers — заглушки
+- ActionMenu — глобальное меню «+»; конфиг `lib/actionMenu/`; flow «Новая трата» (3 шага) + «Новое поступление» (TEMP); date-picker переиспользуется с `?from=newExpense`
 - TransactionFilter — фильтры операций (`useFilterStore`); date-picker `/transactions/filter/date-picker`
 
 ## НЕЛЬЗЯ

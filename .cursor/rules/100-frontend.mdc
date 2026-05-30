@@ -47,7 +47,15 @@ store → useMemo + утилиты → props в shared/ui
 - **TransactionFilter** (`853:410`) — UI фильтров; **DatePickerPlaceholder** (`853:457`) — календарь, `periodType: 'custom'`
 - **TransactionStats** — список «В этом месяце»; клик по `CategorySummaryCard` → `/transactions/categories/:categoryKey`
 - **TransactionCategory** (`1038:60`) — hero gradient + `BackButton variant="card"` (pill белый); чипы-фильтры TEMP; `TransactionItem`
-- **BackButton** — `variant="card"` только для кнопки на gradient-карточке категории
+- **BackButton** — `variant="card"` на gradient hero категории и в формах ActionMenu (шаги «Новая трата» / «Новое поступление»)
+
+## Action Menu (новая трата / поступление)
+- **Store:** `useActionMenuStore` — `activeScreen`: `list` | `newIncome` | `newExpense` | `newExpenseSuccess`; черновик `newExpenseDraft` (step `details`|`meta`, сумма, категория, счёт, магазин, кешбэк, дата)
+- **Компоненты:** `ActionMenuNewExpense`, `ActionMenuNewExpenseSuccess`, `ActionMenuNewIncome`; стили форм — `ActionMenuForm.module.css`
+- **Новая трата:** шаг 1 — сумма + категория; шаг 2 — сетка 2×2 (счёт, кешбэк, магазин, дата); шаг 3 — «Успешно» Figma `1083:103`, авто-закрытие 3 сек
+- **Сохранение:** `lib/actionMenu/submitNewExpense.js` — TEMP: `updateProduct` + prepend в `useTransactionsStore.transactions` (без API, без persist после F5)
+- **Date-picker:** `/transactions/filter/date-picker?from=newExpense` — одна дата, Back = подтверждение; фильтры (`useFilterStore`) не трогаются; при переходе меню скрывается (`isExpenseDatePickerActive`)
+- **GlassSelect** — prop `size="compact"` (52px) для полей шага 2
 
 ## Zustand anti-pattern
 НЕ создавать вычисляемые массивы как геттеры в store (sortedX, groupedX) —

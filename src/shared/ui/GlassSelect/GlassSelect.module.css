@@ -3,6 +3,21 @@
   width: 100%;
 }
 
+.rootCompact .trigger {
+  height: 52px;
+  padding: 0 36px 0 15px;
+  font-size: 18px;
+  font-weight: var(--font-weight-medium);
+  color: rgba(44, 44, 44, 0.4);
+  box-shadow: var(--shadow-icon);
+}
+
+.rootCompact .chevron {
+  right: 15px;
+  width: 8px;
+  height: 8px;
+}
+
 .trigger {
   width: 100%;
   height: var(--control-height-lg);

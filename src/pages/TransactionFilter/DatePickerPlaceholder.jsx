@@ -1,7 +1,8 @@
 import { useMemo, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 
 import { BackButton } from '../../shared/ui/BackButton/BackButton.jsx'
+import { useActionMenuStore } from '../../stores/useActionMenuStore.js'
 import { useFilterStore } from '../../stores/useFilterStore.js'
 
 import styles from './DatePickerPlaceholder.module.css'
@@ -50,7 +51,12 @@ const buildMonthList = () => {
   return months
 }
 
-const readInitialSelectedDates = () => {
+const readInitialSelectedDates = (isExpenseMode) => {
+  if (isExpenseMode) {
+    const date = useActionMenuStore.getState().newExpenseDraft?.date
+    return date ? [date] : []
+  }
+
   const { periodType, customDateRange } = useFilterStore.getState()
   if (periodType !== 'custom') return []
 
@@ -136,14 +142,24 @@ function MonthGrid({ year, monthIndex, selectedDates, onDayClick }) {
 
 export function DatePickerPlaceholder() {
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
+  const isExpenseMode = searchParams.get('from') === 'newExpense'
+
   const setPeriodType = useFilterStore((state) => state.setPeriodType)
   const setCustomDateRange = useFilterStore((state) => state.setCustomDateRange)
+  const completeExpenseDatePick = useActionMenuStore((state) => state.completeExpenseDatePick)
+  const expenseDatePickerReturnPath = useActionMenuStore((state) => state.expenseDatePickerReturnPath)
 
-  const [selectedDates, setSelectedDates] = useState(readInitialSelectedDates)
+  const [selectedDates, setSelectedDates] = useState(() => readInitialSelectedDates(isExpenseMode))
 
   const months = useMemo(() => buildMonthList(), [])
 
   const handleDayClick = (dateKey) => {
+    if (isExpenseMode) {
+      setSelectedDates([dateKey])
+      return
+    }
+
     setSelectedDates((prev) => {
       if (prev.length >= 2) return [dateKey]
       if (prev.length === 0) return [dateKey]
@@ -173,12 +189,22 @@ export function DatePickerPlaceholder() {
     navigate(-1)
   }
 
+  const handleExpenseBack = () => {
+    if (selectedDates.length === 1) {
+      completeExpenseDatePick(selectedDates[0])
+    }
+
+    navigate(expenseDatePickerReturnPath || '/')
+  }
+
+  const headerTitle = isExpenseMode ? 'Выберите дату' : 'Выберите даты'
+
   return (
     <div className={styles.page}>
       <div className={styles.topFixed}>
         <header className={styles.header}>
-          <BackButton onClick={handleSaveAndBack} />
-          <h1 className={styles.headerTitle}>Выберите даты</h1>
+          <BackButton onClick={isExpenseMode ? handleExpenseBack : handleSaveAndBack} />
+          <h1 className={styles.headerTitle}>{headerTitle}</h1>
         </header>
 
         <div className={styles.weekdays} aria-hidden="true">

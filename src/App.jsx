@@ -30,10 +30,10 @@ function App() {
       <Route element={<WithBottomNavLayout />}>
         <Route path="/" element={<Home />} />
         <Route path="/transactions" element={<Transactions />} />
-        <Route path="/settings" element={<Settings />} />
       </Route>
 
       <Route element={<NoBottomNavLayout />}>
+        <Route path="/settings" element={<Settings />} />
         <Route path="/accounts" element={<Accounts />} />
         <Route path="/products/:id" element={<ProductEdit />} />
         <Route path="/transactions/stats" element={<TransactionStats />} />

@@ -5,45 +5,43 @@
 
 ## Что сделано недавно
 
+### Action Menu — «Новая трата» (Figma `814:1013`, `1083:*`)
+- [x] **Шаг 1** — сумма + категория; зелёная стрелка → шаг 2
+- [x] **Шаг 2** — сетка 2×2: счёт / кешбэк / магазин (`GlassSelect compact`) / дата
+- [x] **Date-picker** — `?from=newExpense`: одна дата, Back = сохранить; меню скрывается на время календаря; черновик в `useActionMenuStore.newExpenseDraft`
+- [x] **Подтверждение** — `submitNewExpense.js`: списание `updateProduct` + транзакция в `useTransactionsStore` (TEMP, сессия)
+- [x] **Экран «Успешно»** — Figma `1083:103`, авто-закрытие 3 сек; «Сохранить шаблон?» — заглушка
+- [x] **«Новое поступление»** — сумма + счёт, `updateProduct` (без записи транзакции)
+
 ### TransactionFilter и date-picker
-- [x] **`useFilterStore`** — категории, период, счета, операции; отдельно от `useTransactionsStore`
-- [x] **`/transactions/filter`** — UI по Figma `853:410`: категории, период, карты, операции, glass action bar
-- [x] **`/transactions/filter/date-picker`** — календарь Figma `853:457`; 1–2 даты; Back = сохранить
-- [x] **`applyTransactionFilters`** — `calcTransactionStats.js`; фильтрация через `useMemo` на страницах
-- [x] **TransactionStats** / **TransactionCategory** — читают фильтры из `useFilterStore`
-- [x] Период: `week` / `month` / `custom` (+ `customDateRange.from/to` как `YYYY-MM-DD`)
-
-### TransactionCategory (`/transactions/categories/:categoryKey`) — Figma `1038:60`
-- [x] Hero, список `TransactionItem`, чипы TEMP, навигация со stats
-
-### TransactionStats (`/transactions/stats`)
-- [x] Donut, plan-карточка, «В этом месяце» → category
-
-### Global Action Menu, Chat, Transactions dashboard
-- [x] Action menu infra; Chat UI; dashboard Figma `814:1087`
+- [x] **`useFilterStore`** — категории, период, счета, операции
+- [x] **`/transactions/filter`** — UI Figma `853:410`
+- [x] **`/transactions/filter/date-picker`** — календарь Figma `853:457`; фильтры: 1–2 даты; expense-режим отдельно
+- [x] **TransactionStats** / **TransactionCategory** — фильтры из `useFilterStore`
 
 ### Ранее (UI)
-- [x] GlassSelect, Home, ProductEdit, Accounts, TEMP CRUD, auth/products API
+- [x] GlassSelect (+ `size="compact"`), Home, ProductEdit, Accounts, Chat, dashboard `814:1087`, TEMP CRUD, auth/products API
 
 ## В процессе
-- [ ] **Action menu** — финальные пункты по экранам + реальные handlers
-- [ ] **TransactionCategory** — логика чипов-фильтров (локальных TEMP) vs `useFilterStore`
-- [ ] **Mapper продуктов** — формат `GET /api/products/` vs поля UI
-- [ ] **Backend CRUD продуктов** — заменить TEMP save/delete
+- [ ] **Action menu** — остальные пункты (`uploadStatement`, `createGoal`, …) + handlers
+- [ ] **Новое поступление** — запись `income` в `useTransactionsStore`
+- [ ] **TransactionCategory** — логика TEMP-чипов vs `useFilterStore`
+- [ ] **Mapper продуктов** / **Backend CRUD продуктов**
 
 ## Осталось (до хакатона)
-- [ ] Реальные `actionKey` → навигация / API
+- [ ] API транзакций (persist после F5)
+- [ ] Кешбэк в модели транзакции (поле в форме есть, в submit не пишется)
+- [ ] Dashboard `/transactions` — читать store / monthlySpending
 - [ ] Chat: отправка + backend/AI
-- [ ] **TransactionTag** — заглушка (`/transactions/tags/:tagId`)
-- [ ] API: транзакции, платежи, теги
+- [ ] **TransactionTag** — заглушка
 - [ ] Иконки сервисов в PaymentCard и TransactionItem
 
 ## Известные проблемы
 - ESLint warning в `ChipCarousel`, `AppShell` (exhaustive-deps)
 - Chat: локальный state (TEMP), не zustand
 - `fetchProducts` при успехе API пока не подменяет `products` в store
-- Action menu: overlay прозрачный; scroll-lock body пока меню открыто
-- TransactionCategory: чипы на странице — визуальные TEMP, не связаны с `useFilterStore`
+- Траты из action menu — только в памяти; F5 сбрасывает моки
+- TransactionCategory: чипы — визуальные TEMP
 
 ## Стек
 React + Vite | JavaScript | CSS Modules | zustand | recharts | axios | react-router-dom
@@ -51,20 +49,21 @@ React + Vite | JavaScript | CSS Modules | zustand | recharts | axios | react-rou
 ## Бэкенд
 - **Base URL:** `https://cashapps.ru`
 - **Auth:** `POST /auth/access/` | **Products:** `GET /api/products/` + Bearer
+- **Transactions:** нет API
 
 ## Роутинг
-- С BottomNav: `/`, `/transactions`, `/settings`
-- Без BottomNav: `/accounts`, `/products/:id`, `/transactions/stats`, `/transactions/categories/:categoryKey`, `/transactions/filter`, `/transactions/filter/date-picker`, `/transactions/tags/:tagId`, `/chat`, `/chat/history`, `/profile`
+- С BottomNav: `/`, `/transactions`
+- Без BottomNav: `/settings`, `/accounts`, `/products/:id`, `/transactions/stats`, `/transactions/categories/:categoryKey`, `/transactions/filter`, `/transactions/filter/date-picker`, `/transactions/tags/:tagId`, `/chat`, `/chat/history`, `/profile`
 
 ## Состояние страниц
 | Страница | Роут | Статус |
 |----------|------|--------|
 | Home | `/` | ✅ + action menu |
 | Transactions | `/transactions` | ✅ dashboard 814:1087 |
-| TransactionStats | `/transactions/stats` | ✅ + фильтры из useFilterStore |
-| TransactionCategory | `/transactions/categories/:categoryKey` | ✅ + фильтры (без selectedCategories) |
+| TransactionStats | `/transactions/stats` | ✅ + фильтры |
+| TransactionCategory | `/transactions/categories/:categoryKey` | ✅ + фильтры |
 | TransactionFilter | `/transactions/filter` | ✅ Figma 853:410 |
-| DatePickerPlaceholder | `/transactions/filter/date-picker` | ✅ Figma 853:457 |
+| DatePickerPlaceholder | `/transactions/filter/date-picker` | ✅ + expense mode |
 | Settings | `/settings` | 🔶 заглушка |
 | Accounts | `/accounts` | ✅ |
 | ProductEdit | `/products/:id` | ✅ TEMP CRUD |
@@ -74,8 +73,7 @@ React + Vite | JavaScript | CSS Modules | zustand | recharts | axios | react-rou
 | Profile | `/profile` | 🔶 заглушка |
 
 ## Следующий этап
-1. Action menu: финальные пункты + handlers
-2. TransactionCategory: связать или убрать TEMP-чипы
-3. Chat: отправка + backend/AI
-4. Mapper products + backend CRUD
-5. API транзакций/платежей
+1. API / persist транзакций; кешбэк в submit
+2. Action menu: остальные пункты + income → transactions
+3. Dashboard `/transactions` ← store
+4. Chat + mapper products + backend CRUD

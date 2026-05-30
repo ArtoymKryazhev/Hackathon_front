@@ -3,7 +3,7 @@ import { createPortal } from 'react-dom'
 
 import styles from './GlassSelect.module.css'
 
-export function GlassSelect({ value, onChange, options, ariaLabel }) {
+export function GlassSelect({ value, onChange, options, ariaLabel, size = 'default' }) {
   const [isOpen, setIsOpen] = useState(false)
   const listboxId = useId()
 
@@ -84,7 +84,9 @@ export function GlassSelect({ value, onChange, options, ariaLabel }) {
 
   return (
     <>
-      <div className={styles.root}>
+      <div
+        className={[styles.root, size === 'compact' ? styles.rootCompact : null].filter(Boolean).join(' ')}
+      >
         <button
           type="button"
           className={styles.trigger}

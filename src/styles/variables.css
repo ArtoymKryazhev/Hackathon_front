@@ -74,8 +74,12 @@
   --action-menu-card-padding: 30px;
   --action-menu-row-height: 49px;
   --action-menu-row-gap: 22px;
-  --action-menu-item-inset-x: 6px;
-  --action-menu-item-padding-x: 18px;
+  --action-menu-item-inset-x: 0;
+  --action-menu-item-padding-x: 12px;
+  --action-menu-form-width: 404px;
+  --action-menu-form-margin: 18px;
+  --action-menu-form-padding: 18px;
+  --action-menu-success-top: 318px;
   /* Figma 817:1525 — frosted glass: полупрозрачные слои + blur */
   --action-menu-card-bg:
     linear-gradient(0deg, rgba(245, 245, 245, 0.6) 0%, rgba(245, 245, 245, 0.6) 100%),

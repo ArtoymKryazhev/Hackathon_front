@@ -10,6 +10,8 @@ import iconPlus from '../../assets/icons/icon-plus.svg'
 
 import styles from './BottomNav.module.css'
 
+const BOTTOM_NAV_PATHS = ['/', '/transactions']
+
 const NAV_ITEMS = [
   {
     id: 'menu',
@@ -41,6 +43,10 @@ export function BottomNav() {
   const { pathname } = useLocation()
   const isActionMenuOpen = useActionMenuStore((state) => state.isOpen)
   const openActionMenu = useActionMenuStore((state) => state.open)
+
+  if (!BOTTOM_NAV_PATHS.includes(pathname)) {
+    return null
+  }
 
   return (
     <nav className={styles.root} aria-label="Нижняя навигация">
