@@ -41,6 +41,106 @@ export function filterTransactionsByCategory(transactions, categoryName, operati
   )
 }
 
+const startOfDay = (date) => {
+  const d = new Date(date)
+  d.setHours(0, 0, 0, 0)
+  return d
+}
+
+const endOfDay = (date) => {
+  const d = new Date(date)
+  d.setHours(23, 59, 59, 999)
+  return d
+}
+
+const normalizeAccountLast4 = (value) => {
+  if (!value) return ''
+  const digits = String(value).replace(/\D/g, '')
+  return digits.slice(-4)
+}
+
+const getCalendarWeekStart = (date) => {
+  const d = startOfDay(date)
+  const day = d.getDay()
+  const mondayOffset = day === 0 ? 6 : day - 1
+  d.setDate(d.getDate() - mondayOffset)
+  return d
+}
+
+const getCalendarMonthStart = (date) => {
+  const d = startOfDay(date)
+  d.setDate(1)
+  return d
+}
+
+const matchesPeriodFilter = (operationDate, periodType, customDateRange) => {
+  if (!periodType) return true
+
+  const txTime = new Date(operationDate).getTime()
+  if (Number.isNaN(txTime)) return false
+
+  if (periodType === 'week') {
+    const weekStart = getCalendarWeekStart(new Date())
+    const todayEnd = endOfDay(new Date())
+    return txTime >= weekStart.getTime() && txTime <= todayEnd.getTime()
+  }
+
+  if (periodType === 'month') {
+    const monthStart = getCalendarMonthStart(new Date())
+    const todayEnd = endOfDay(new Date())
+    return txTime >= monthStart.getTime() && txTime <= todayEnd.getTime()
+  }
+
+  if (periodType === 'custom') {
+    const from = customDateRange?.from
+    const to = customDateRange?.to
+    if (!from && !to) return true
+
+    if (from && txTime < startOfDay(from).getTime()) return false
+    if (to && txTime > endOfDay(to).getTime()) return false
+    return true
+  }
+
+  return true
+}
+
+/**
+ * Применяет активные фильтры из useFilterStore к массиву транзакций.
+ * @param {{ skipCategoryFilter?: boolean }} options — на странице категории категории из store игнорируются
+ */
+export function applyTransactionFilters(transactions, filters, options = {}) {
+  const {
+    selectedCategories = [],
+    periodType = null,
+    customDateRange = { from: null, to: null },
+    selectedAccountNumbers = [],
+    selectedOperations = [],
+  } = filters
+
+  const { skipCategoryFilter = false } = options
+
+  return (transactions ?? []).filter((tx) => {
+    if (!skipCategoryFilter && selectedCategories.length > 0) {
+      if (!selectedCategories.includes(getCategoryName(tx))) return false
+    }
+
+    if (!matchesPeriodFilter(tx.operation_date, periodType, customDateRange)) {
+      return false
+    }
+
+    if (selectedAccountNumbers.length > 0) {
+      const last4 = normalizeAccountLast4(tx.account_number)
+      if (!selectedAccountNumbers.includes(last4)) return false
+    }
+
+    if (selectedOperations.length > 0) {
+      if (!selectedOperations.includes(tx.operation)) return false
+    }
+
+    return true
+  })
+}
+
 /**
  * Метод наибольших остатков: percent в сумме ровно 100.0, шаг 0.1%.
  */

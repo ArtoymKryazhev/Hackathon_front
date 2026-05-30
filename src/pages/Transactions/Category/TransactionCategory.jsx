@@ -4,11 +4,13 @@ import { Link, useParams } from 'react-router-dom'
 
 import iconMenu from '../../../assets/icons/icon-menu.svg'
 import {
+  applyTransactionFilters,
   decodeCategoryRouteParam,
   filterTransactionsByCategory,
 } from '../../../lib/utils/calcTransactionStats.js'
 import { formatCurrency } from '../../../lib/utils/formatters.js'
 import { useDragScroll } from '../../../lib/hooks/useDragScroll.js'
+import { useFilterStore } from '../../../stores/useFilterStore.js'
 import { useTransactionsStore } from '../../../stores/useTransactionsStore.js'
 import { BackButton } from '../../../shared/ui/BackButton/BackButton.jsx'
 import { Chip } from '../../../shared/ui/Chip/Chip.jsx'
@@ -33,18 +35,42 @@ export function TransactionCategory() {
   const transactions = useTransactionsStore((s) => s.transactions)
   const operationType = useTransactionsStore((s) => s.operationType)
 
+  const periodType = useFilterStore((s) => s.periodType)
+  const customDateRange = useFilterStore((s) => s.customDateRange)
+  const selectedAccountNumbers = useFilterStore((s) => s.selectedAccountNumbers)
+  const selectedOperations = useFilterStore((s) => s.selectedOperations)
+
   const categoryName = useMemo(
     () => decodeCategoryRouteParam(categoryKey),
     [categoryKey],
   )
 
-  const categoryTransactions = useMemo(
-    () =>
-      filterTransactionsByCategory(transactions, categoryName, operationType).sort(
-        (a, b) => new Date(b.operation_date) - new Date(a.operation_date),
-      ),
-    [transactions, categoryName, operationType],
-  )
+  const categoryTransactions = useMemo(() => {
+    const byCategory = filterTransactionsByCategory(
+      transactions,
+      categoryName,
+      operationType,
+    )
+
+    return applyTransactionFilters(
+      byCategory,
+      {
+        periodType,
+        customDateRange,
+        selectedAccountNumbers,
+        selectedOperations,
+      },
+      { skipCategoryFilter: true },
+    ).sort((a, b) => new Date(b.operation_date) - new Date(a.operation_date))
+  }, [
+    transactions,
+    categoryName,
+    operationType,
+    periodType,
+    customDateRange,
+    selectedAccountNumbers,
+    selectedOperations,
+  ])
 
   const totalAmount = useMemo(
     () =>

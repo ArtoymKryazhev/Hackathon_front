@@ -6,6 +6,7 @@ import { Home } from './pages/Home/Home.jsx'
 import { Accounts } from './pages/Accounts/Accounts.jsx'
 import { Transactions } from './pages/Transactions/Transactions.jsx'
 import { TransactionStats } from './pages/Transactions/Stats/TransactionStats.jsx'
+import { DatePickerPlaceholder } from './pages/TransactionFilter/DatePickerPlaceholder.jsx'
 import { TransactionFilter } from './pages/TransactionFilter/TransactionFilter.jsx'
 import { TransactionTag } from './pages/TransactionTag/TransactionTag.jsx'
 import { TransactionCategory } from './pages/Transactions/Category/TransactionCategory.jsx'
@@ -37,6 +38,10 @@ function App() {
         <Route path="/products/:id" element={<ProductEdit />} />
         <Route path="/transactions/stats" element={<TransactionStats />} />
         <Route path="/transactions/filter" element={<TransactionFilter />} />
+        <Route
+          path="/transactions/filter/date-picker"
+          element={<DatePickerPlaceholder />}
+        />
         <Route path="/transactions/tags/:tagId" element={<TransactionTag />} />
         <Route
           path="/transactions/categories/:categoryKey"

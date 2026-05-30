@@ -19,11 +19,12 @@ Mobile-first. Аудитория — люди без финансовой экс
 - src/shared/ui/      — атомарные UI-компоненты (Button, Input, Card, GlassSelect, DonutChartCard, …)
 - src/components/     — составные блоки (AppShell, BottomNav, ActionMenu)
 - src/pages/          — экраны целиком (`Transactions/Stats/`, `Transactions/Category/`, …)
-- src/stores/         — zustand-сторы (не src/store/)
+- src/stores/         — zustand-сторы (auth, accounts, transactions, useFilterStore, useActionMenuStore; не src/store/)
 - src/lib/api/        — axios-функции (не src/api/)
 - src/lib/mocks|utils|constants|hooks — данные и вспомогательная логика
 - Chat/ChatHistory — UI на моках (`chatMocks.js`), без API; TEMP до AI/backend
 - ActionMenu — глобальное меню по «+» в BottomNav; конфиг в `lib/actionMenu/`; handlers — заглушки
+- TransactionFilter — фильтры операций (`useFilterStore`); date-picker `/transactions/filter/date-picker`
 
 ## НЕЛЬЗЯ
 - Не добавлять TypeScript

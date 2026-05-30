@@ -5,9 +5,11 @@ import iconMenu from '../../../assets/icons/icon-menu.svg'
 import iconArrowRight from '../../../assets/icons/icon_arrow_right.svg'
 import iconHackcashAi from '../../../assets/icons/icon_hackcash_ai.svg'
 import {
+  applyTransactionFilters,
   calcTransactionStats,
   getCategoryRoutePath,
 } from '../../../lib/utils/calcTransactionStats.js'
+import { useFilterStore } from '../../../stores/useFilterStore.js'
 import { useTransactionsStore } from '../../../stores/useTransactionsStore.js'
 import { BackButton } from '../../../shared/ui/BackButton/BackButton.jsx'
 import { DonutChartCard } from '../../../shared/ui/DonutChartCard/DonutChartCard.jsx'
@@ -37,9 +39,34 @@ export function TransactionStats() {
   const operationType = useTransactionsStore((s) => s.operationType)
   const setOperationType = useTransactionsStore((s) => s.setOperationType)
 
+  const selectedCategories = useFilterStore((s) => s.selectedCategories)
+  const periodType = useFilterStore((s) => s.periodType)
+  const customDateRange = useFilterStore((s) => s.customDateRange)
+  const selectedAccountNumbers = useFilterStore((s) => s.selectedAccountNumbers)
+  const selectedOperations = useFilterStore((s) => s.selectedOperations)
+
+  const filteredTransactions = useMemo(
+    () =>
+      applyTransactionFilters(transactions, {
+        selectedCategories,
+        periodType,
+        customDateRange,
+        selectedAccountNumbers,
+        selectedOperations,
+      }),
+    [
+      transactions,
+      selectedCategories,
+      periodType,
+      customDateRange,
+      selectedAccountNumbers,
+      selectedOperations,
+    ],
+  )
+
   const stats = useMemo(
-    () => calcTransactionStats(transactions, operationType),
-    [transactions, operationType],
+    () => calcTransactionStats(filteredTransactions, operationType),
+    [filteredTransactions, operationType],
   )
 
   const monthLabel = MONTH_LABELS[new Date().getMonth()]
