@@ -11,6 +11,7 @@ import { TransactionTag } from './pages/TransactionTag/TransactionTag.jsx'
 import { Chat } from './pages/Chat/Chat.jsx'
 import { Settings } from './pages/Settings/Settings.jsx'
 import { Profile } from './pages/Profile/Profile.jsx'
+import { ProductEdit } from './pages/ProductEdit/ProductEdit.jsx'
 
 function WithBottomNavLayout() {
   return <AppShell withBottomNav />
@@ -31,6 +32,7 @@ function App() {
 
       <Route element={<NoBottomNavLayout />}>
         <Route path="/accounts" element={<Accounts />} />
+        <Route path="/products/:id" element={<ProductEdit />} />
         <Route path="/transactions/stats" element={<TransactionStats />} />
         <Route path="/transactions/filter" element={<TransactionFilter />} />
         <Route path="/transactions/tags/:tagId" element={<TransactionTag />} />

@@ -32,17 +32,7 @@ export const useAccountsStore = create((set, get) => ({
 
     try {
       const { getProducts } = await import('../lib/api/products.js')
-      const items = await getProducts()
-
-      if (items.length > 0) {
-        set({
-          products: items,
-          productsLoading: false,
-          productsLoaded: true,
-          productsError: null,
-        })
-        return
-      }
+      await getProducts()
 
       set({
         productsLoading: false,
@@ -90,6 +80,28 @@ export const useAccountsStore = create((set, get) => ({
   getActiveCategoryBalance: () => {
     const items = get().getProductsByActiveCategory()
     return items.reduce((sum, p) => sum + (Number(p.amount) || 0), 0)
+  },
+
+  updateProduct: (payload) => {
+    if (!payload?.id) return
+    set((state) => ({
+      products: state.products.map((p) =>
+        p.id === payload.id
+          ? {
+              ...p,
+              ...payload,
+              updated_at: payload.updated_at || new Date().toISOString(),
+            }
+          : p,
+      ),
+    }))
+  },
+
+  removeProduct: (id) => {
+    if (!id) return
+    set((state) => ({
+      products: state.products.filter((p) => p.id !== id),
+    }))
   },
 }))
 

@@ -1,3 +1,7 @@
+import { useNavigate } from 'react-router-dom'
+
+import { getBankIcon, isBankIconFullBleed } from '../../../lib/constants/bankIconMap.js'
+
 import styles from './ProductCard.module.css'
 
 const formatMoney = (amount, currencyCode) => {
@@ -16,13 +20,28 @@ const formatMoney = (amount, currencyCode) => {
   }
 }
 
-export function ProductCard({ product, badge }) {
+export function ProductCard({ product, badge, interactive = true }) {
+  const navigate = useNavigate()
   const name = product?.custom_name || product?.bank_name || '—'
   const amount = Number(product?.amount) || 0
   const formatted = formatMoney(amount, product?.currency_code)
+  const bankIcon = getBankIcon(product?.bank_name)
+  const fullBleed = isBankIconFullBleed(product?.bank_name)
 
-  return (
-    <div className={styles.root} role="group" aria-label={name}>
+  const trailingClassName = [styles.trailing, fullBleed ? styles.trailingFullBleed : '']
+    .filter(Boolean)
+    .join(' ')
+
+  const bankIconClassName = [styles.bankIcon, fullBleed ? styles.bankIconFullBleed : '']
+    .filter(Boolean)
+    .join(' ')
+
+  const handleClick = () => {
+    if (product?.id) navigate(`/products/${product.id}`)
+  }
+
+  const content = (
+    <>
       <div className={styles.content}>
         <div className={styles.title}>{name}</div>
         <div className={styles.bottomRow}>
@@ -33,8 +52,23 @@ export function ProductCard({ product, badge }) {
         </div>
       </div>
 
-      <div className={styles.trailing} aria-hidden="true" />
-    </div>
+      <div className={trailingClassName} aria-hidden="true">
+        {bankIcon ? <img className={bankIconClassName} src={bankIcon} alt="" /> : null}
+      </div>
+    </>
+  )
+
+  if (!interactive) {
+    return (
+      <div className={styles.rootStatic} aria-label={name}>
+        {content}
+      </div>
+    )
+  }
+
+  return (
+    <button type="button" className={styles.root} aria-label={name} onClick={handleClick}>
+      {content}
+    </button>
   )
 }
-

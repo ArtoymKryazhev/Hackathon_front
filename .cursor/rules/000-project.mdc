@@ -19,8 +19,9 @@ Mobile-first. Аудитория — люди без финансовой экс
 - src/shared/ui/      — атомарные UI-компоненты (Button, Input, Card)
 - src/components/     — составные блоки страниц
 - src/pages/          — экраны целиком
-- src/store/          — zustand-сторы
-- src/api/            — все запросы к бэку
+- src/stores/         — zustand-сторы (не src/store/)
+- src/lib/api/        — axios-функции (не src/api/)
+- src/lib/mocks|utils|constants|hooks — данные и вспомогательная логика
 
 ## НЕЛЬЗЯ
 - Не добавлять TypeScript
@@ -29,6 +30,7 @@ Mobile-first. Аудитория — люди без финансовой экс
 - Не менять package.json без запроса
 - Не делать большие рефакторинги — только точечные правки
 - Не использовать inline styles и Tailwind
+- Не хранить токены в localStorage/sessionStorage — только в памяти (auth.js)
 
 ## Работа в Agent mode
 1. Перечисли затрагиваемые файлы и предложи подход

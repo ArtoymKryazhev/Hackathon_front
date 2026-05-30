@@ -1,4 +1,31 @@
 .root {
+  width: 100%;
+  height: 82px;
+  border: 0;
+  margin: 0;
+  border-radius: var(--radius-pill);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-sm);
+  display: grid;
+  grid-template-columns: 1fr 42px;
+  align-items: center;
+  column-gap: var(--space-12);
+  padding: 0 18px;
+  box-sizing: border-box;
+  cursor: pointer;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.root:focus-visible {
+  outline: 2px solid var(--color-accent-1);
+  outline-offset: 2px;
+}
+
+.rootStatic {
+  width: 100%;
   height: 82px;
   border-radius: var(--radius-pill);
   background: var(--color-surface);
@@ -78,5 +105,27 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.trailingFullBleed {
+  background: transparent;
+  box-shadow: none;
+}
+
+.bankIcon {
+  width: 32px;
+  height: 32px;
+  display: block;
+  object-fit: contain;
+}
+
+.bankIconFullBleed {
+  width: 42px;
+  height: 42px;
+  border-radius: var(--radius-md);
+  object-fit: cover;
+  box-shadow: var(--shadow-icon);
 }
 
