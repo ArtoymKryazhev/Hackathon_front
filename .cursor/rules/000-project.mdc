@@ -16,7 +16,7 @@ Mobile-first. Аудитория — люди без финансовой экс
 - axios — HTTP-запросы
 
 ## Структура папок
-- src/shared/ui/      — атомарные UI-компоненты (Button, Input, Card, GlassSelect, …)
+- src/shared/ui/      — атомарные UI-компоненты (Button, Input, Card, GlassSelect, DonutChartCard, …)
 - src/components/     — составные блоки (AppShell, BottomNav, ActionMenu)
 - src/pages/          — экраны целиком
 - src/stores/         — zustand-сторы (не src/store/)

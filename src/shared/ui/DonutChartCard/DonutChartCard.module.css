@@ -130,6 +130,22 @@
   text-overflow: ellipsis;
 }
 
+.centerDiscDebt {
+  width: auto;
+  height: auto;
+  background: transparent;
+  border: none;
+}
+
+.centerAmountLarge {
+  max-width: none;
+  font-size: 42px;
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-normal);
+  overflow: visible;
+  text-overflow: unset;
+}
+
 .legend {
   flex: 1;
   min-width: 0;
@@ -152,6 +168,91 @@
   column-gap: var(--space-12);
   min-height: 18px;
   overflow: visible;
+}
+
+.legendItemCompact {
+  display: grid;
+  grid-template-columns: 11px minmax(0, 1fr);
+  align-items: center;
+  column-gap: var(--space-12);
+  min-height: 18px;
+  overflow: visible;
+}
+
+.legendDebt .legendItemCompact {
+  grid-template-columns: 15px minmax(0, 1fr);
+  column-gap: var(--space-12);
+  min-height: 15px;
+}
+
+.legendFooterBlock {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.legendDebt .legendFooterBlock {
+  margin-top: 22px;
+}
+
+.legendFooterPill {
+  width: 100%;
+  max-width: 184px;
+  min-height: 52px;
+  padding: 8px 22px;
+  border-radius: 60px;
+  background: var(--color-surface);
+  border: 0.25px solid #eee;
+  box-shadow: var(--shadow-sm);
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2px;
+}
+
+.legendFooterLabel {
+  font-family: var(--font-brand);
+  font-size: 12px;
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-normal);
+  color: rgba(44, 44, 44, 0.2);
+}
+
+.legendFooterValue {
+  font-family: var(--font-brand);
+  font-size: 14px;
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-normal);
+  color: var(--color-text-primary);
+}
+
+.legendDebt {
+  justify-content: flex-start;
+  gap: 0;
+}
+
+.legendDebt .legendItemCompact + .legendItemCompact {
+  margin-top: 12px;
+}
+
+.legendDotDebt {
+  width: 15px;
+  height: 15px;
+}
+
+.legendDebt .legendDotCell {
+  width: 15px;
+  height: 15px;
+}
+
+.legendNameDebt {
+  font-size: 12px;
+  line-height: var(--line-height-normal);
+}
+
+.legendPercent {
+  color: rgba(44, 44, 44, 0.6);
 }
 
 .legendDotCell {
@@ -202,5 +303,13 @@
     height: auto;
     justify-content: flex-start;
     gap: var(--space-12);
+  }
+
+  .legendDebt {
+    height: auto;
+  }
+
+  .legendDebt .legendFooterBlock {
+    margin-top: 22px;
   }
 }

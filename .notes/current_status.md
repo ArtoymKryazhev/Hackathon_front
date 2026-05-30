@@ -21,9 +21,16 @@
 - [x] **BackButton** в шапках Chat и ChatHistory
 
 ### UI / страницы (последняя сессия)
+
+### Transactions (`/transactions`) — редизайн по Figma `814:1087`
+- [x] **Новая структура экрана** — карточка «Траты в этом месяце» (клик → `/transactions/stats`), donut «Уровень долговой нагрузки», кнопка «Спросить в чате», две info-строки (заглушки)
+- [x] **DonutChartCard** — debt-вариант: `centerText`, `hideLegendAmounts`, `legendFooter`; проценты в легенде; pill «Уровень / Оптимальный»; моки 75/25 в `Transactions.jsx`
+- [x] **Кнопка чата** — градиентная обводка `#5C03BC` → `#E536AB`, иконка `icon_arrow-up-right.svg`
+- [x] Старый список транзакций / платежей / фильтры на `/transactions` убраны (данные остаются в store для `/transactions/stats`)
+
+### Ранее (UI)
 - [x] **GlassSelect** — кастомный select (валюта, банк) в ProductEdit; портал, glass-стиль по Figma
 - [x] **Home** — без вертикального скролла страницы (`overflow: hidden`, `contentNoScroll` в AppShell на `/`)
-- [x] **Transactions** — у `TransactionItem` убраны разделительные линии между операциями
 
 ### Ранее
 - [x] ProductEdit, Accounts, иконки банков, TEMP client-side CRUD
@@ -69,7 +76,7 @@ React + Vite | JavaScript | CSS Modules | zustand | recharts | axios | react-rou
 | Страница | Роут | Статус |
 |----------|------|--------|
 | Home | `/` | ✅ + action menu |
-| Transactions | `/transactions` | ✅ моки, без разделителей в списке |
+| Transactions | `/transactions` | ✅ dashboard по Figma 814:1087; action menu через «+» |
 | Settings | `/settings` | 🔶 заглушка + action menu |
 | Accounts | `/accounts` | ✅ |
 | ProductEdit | `/products/:id` | ✅ TEMP CRUD |

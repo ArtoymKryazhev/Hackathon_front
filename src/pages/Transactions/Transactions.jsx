@@ -1,128 +1,90 @@
-import { useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import iconMenu from '../../assets/icons/icon-menu.svg'
-import { useDragScroll } from '../../lib/hooks/useDragScroll.js'
-import { SERVICE_COLOR_MAP } from '../../lib/constants/serviceColorMap.js'
-import { getNextPaymentDate, sortPaymentsByNearest } from '../../lib/utils/paymentUtils.js'
-import { formatTransactionGroupDate } from '../../lib/utils/formatters.js'
-import {
-  groupTransactionsByDate,
-  useTransactionsStore,
-} from '../../stores/useTransactionsStore.js'
-import { Chip } from '../../shared/ui/Chip/Chip.jsx'
-import { MonthlySpendingCard } from '../../shared/ui/MonthlySpendingCard/MonthlySpendingCard.jsx'
-import { PaymentCard } from '../../shared/ui/PaymentCard/PaymentCard.jsx'
-import { TransactionItem } from '../../shared/ui/TransactionItem/TransactionItem.jsx'
+import iconCalendar from '../../assets/icons/icon_calendar.svg'
+import iconArrowRight from '../../assets/icons/icon_arrow_right.svg'
+import iconArrowUpRight from '../../assets/icons/icon_arrow-up-right.svg'
+import { DonutChartCard } from '../../shared/ui/DonutChartCard/DonutChartCard.jsx'
 
 import styles from './Transactions.module.css'
 
-export function Transactions() {
+const debtChartData = [
+  { name: 'Ежемесячные доходы', value: 75 },
+  { name: 'Ежемесячные платежи', value: 25 },
+]
+
+const DEBT_SEGMENT_COLORS = ['#386FA4', '#91E5F6']
+
+const donutData = debtChartData.map((item, index) => ({
+  category_name: item.name,
+  percent: item.value,
+  color: DEBT_SEGMENT_COLORS[index],
+  totalAmount: 0,
+}))
+
+const debtLoadPercent = `${debtChartData[1].value}%`
+
+const Transactions = () => {
   const navigate = useNavigate()
-  const { scrollerRef, isDragging, dragHandlers } = useDragScroll()
-
-  const monthlySpending = useTransactionsStore((s) => s.monthlySpending)
-  const payments = useTransactionsStore((s) => s.payments)
-  const transactions = useTransactionsStore((s) => s.transactions)
-
-  const sortedPayments = useMemo(() => sortPaymentsByNearest(payments), [payments])
-
-  const groupedTransactions = useMemo(
-    () => groupTransactionsByDate(transactions),
-    [transactions],
-  )
 
   return (
     <div className={styles.page}>
-      <section className={styles.spendingSection} aria-label="Траты в этом месяце">
-        <MonthlySpendingCard
-          amount={monthlySpending.amount}
-          currencyCode={monthlySpending.currency_code}
-          onCalendarClick={() => navigate('/transactions/stats')}
-        />
-      </section>
-
-      <section className={styles.paymentsSection} aria-label="Ближайшие платежи">
-        <h2 className={styles.sectionTitle}>Ближайшие платежи</h2>
-
-        <div
-          ref={scrollerRef}
-          className={[
-            styles.paymentsScroller,
-            isDragging ? styles.paymentsScrollerDragging : null,
-          ]
-            .filter(Boolean)
-            .join(' ')}
-          {...dragHandlers}
-        >
-          {sortedPayments.map((payment) => {
-            const nextPaymentDate = getNextPaymentDate(
-              payment.start_payment,
-              payment.payment_interval_months,
-            )
-            const bgColor =
-              SERVICE_COLOR_MAP[payment.service_name] || SERVICE_COLOR_MAP.default
-
-            return (
-              <PaymentCard
-                key={payment.id}
-                serviceName={payment.service_name}
-                currencyCode={payment.currency_code}
-                amount={payment.amount}
-                customName={payment.custom_name}
-                nextPaymentDate={nextPaymentDate}
-                bgColor={bgColor}
-                onMenuClick={() => {}}
-              />
-            )
-          })}
+      <button
+        type="button"
+        className={styles.spendingCard}
+        onClick={() => navigate('/transactions/stats')}
+        aria-label="Траты в этом месяце — нажмите, чтобы узнать"
+      >
+        <div className={styles.spendingText}>
+          <p className={styles.spendingTitle}>Траты в этом месяце</p>
+          <p className={styles.spendingSubtitle}>Нажмите, чтобы узнать</p>
         </div>
-      </section>
+        <span className={styles.calendarIconWrap} aria-hidden="true">
+          <img className={styles.calendarIcon} src={iconCalendar} alt="" />
+        </span>
+      </button>
 
-      <section className={styles.actionsSection} aria-label="Действия">
-        <Chip
-          variant="pill"
-          className={styles.actionChip}
-          onClick={() => navigate('/transactions/filter')}
-        >
-          <span className={styles.actionChipInner}>
-            <img className={styles.actionIcon} src={iconMenu} alt="" aria-hidden="true" />
-            Фильтры
-          </span>
-        </Chip>
-        <Chip
-          variant="pill"
-          className={styles.actionChipAnalytics}
-          onClick={() => navigate('/transactions/stats')}
-        >
-          Аналитика
-        </Chip>
-      </section>
+      <DonutChartCard
+        title="Уровень долговой нагрузки"
+        data={donutData}
+        totalAmount={0}
+        centerText={debtLoadPercent}
+        hideLegendAmounts
+        legendFooter="Уровень: Оптимальный"
+      />
 
-      <section className={styles.transactionsSection} aria-label="Список транзакций">
-        {groupedTransactions.map((group) => (
-          <div key={group.date} className={styles.transactionGroup}>
-            <h3 className={styles.groupDate}>
-              {formatTransactionGroupDate(`${group.date}T12:00:00.000Z`)}
-            </h3>
-            <div className={styles.transactionList}>
-              {group.items.map((tx) => (
-                <TransactionItem
-                  key={tx.id}
-                  serviceName={tx.service_name}
-                  customServiceName={tx.custom_service_name}
-                  categoryName={tx.category_name}
-                  currencyCode={tx.currency_code}
-                  amount={tx.amount}
-                  operation={tx.operation}
-                  operationDate={tx.operation_date}
-                  accountNumber={tx.account_number}
-                />
-              ))}
-            </div>
-          </div>
-        ))}
-      </section>
+      <div className={styles.chatButtonWrap}>
+        <button
+          type="button"
+          className={styles.chatButton}
+          onClick={() => navigate('/chat')}
+        >
+          <img
+            className={styles.chatButtonIcon}
+            src={iconArrowUpRight}
+            alt=""
+            aria-hidden="true"
+          />
+          <span className={styles.chatButtonText}>Спросить в чате</span>
+        </button>
+      </div>
+
+      <button type="button" className={styles.infoRow} onClick={() => {}}>
+        <div className={styles.infoText}>
+          <p className={styles.infoTitle}>Узнай о своих возможностях</p>
+          <p className={styles.infoSubtitle}>Получи налоговый вычет</p>
+        </div>
+        <img className={styles.chevron} src={iconArrowRight} alt="" aria-hidden="true" />
+      </button>
+
+      <button type="button" className={styles.infoRow} onClick={() => {}}>
+        <div className={styles.infoText}>
+          <p className={styles.infoTitle}>Деньги от государства</p>
+          <p className={styles.infoSubtitle}>Субсидии, пособия и льготы</p>
+        </div>
+        <img className={styles.chevron} src={iconArrowRight} alt="" aria-hidden="true" />
+      </button>
     </div>
   )
 }
+
+export { Transactions }

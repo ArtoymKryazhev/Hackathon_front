@@ -32,6 +32,12 @@ alwaysApply: false
 ## Паттерн страницы
 store → useMemo + утилиты → props в shared/ui
 Страницы только читают store, запросов к API не делают напрямую.
+Исключение (TEMP): `/transactions` dashboard — моки donut на странице; `/chat` — `useState` + `chatMocks.js`.
+
+## DonutChartCard
+- Общий компонент: `src/shared/ui/DonutChartCard/` (recharts)
+- **TransactionStats** — суммы в центре и легенде (`totalAmount`, `monthLabel`)
+- **Debt-вариант** (Transactions): `centerText`, `hideLegendAmounts`, `legendFooter` — не ломать props при правках stats
 
 ## Zustand anti-pattern
 НЕ создавать вычисляемые массивы как геттеры в store (sortedX, groupedX) —
