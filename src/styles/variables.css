@@ -24,6 +24,7 @@
   --font-size-12: 12px;
   --font-size-16: 16px;
   --font-size-20: 20px;
+  --font-size-22: 22px;
   --font-size-36: 36px;
   --line-height-normal: normal;
 
@@ -59,6 +60,29 @@
   /* Layout */
   --layout-max-width: 440px;
   --bottom-nav-offset: calc(var(--control-height-lg) + 18px);
+  --z-bottom-nav: 100;
+  --z-action-menu: 110;
+  --action-menu-duration: 0.22s;
+  --action-menu-overlay-bg: transparent;
+  --action-menu-card-width: 354px;
+  --action-menu-card-margin: 43px;
+  --action-menu-card-gap-above-nav: 41px;
+  --action-menu-card-bottom: calc(
+    18px + var(--control-height-lg) + var(--action-menu-card-gap-above-nav) +
+      env(safe-area-inset-bottom)
+  );
+  --action-menu-card-padding: 30px;
+  --action-menu-row-height: 49px;
+  --action-menu-row-gap: 22px;
+  --action-menu-item-inset-x: 6px;
+  --action-menu-item-padding-x: 18px;
+  /* Figma 817:1525 — frosted glass: полупрозрачные слои + blur */
+  --action-menu-card-bg:
+    linear-gradient(0deg, rgba(245, 245, 245, 0.6) 0%, rgba(245, 245, 245, 0.6) 100%),
+    linear-gradient(0deg, rgba(38, 38, 38, 0.22) 0%, rgba(38, 38, 38, 0.22) 100%);
+  --action-menu-card-blur: 8px;
+  --action-menu-separator-bg: #dbdbdb;
+  --action-menu-separator-track-bg: #c4c4c4;
   --chat-input-gap-above-nav: 22px;
 
   /* Analytics / plan card */

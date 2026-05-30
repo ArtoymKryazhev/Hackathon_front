@@ -21,11 +21,11 @@ alwaysApply: false
 - Базовые стили — для мобильного
 - @media (min-width: 768px) — для планшета и выше
 - Минимальный touch-target: 44px
-- Hover-only UI: дублировать через tap/state + `@media (hover: hover)` (см. Chat actions)
+- Hover-only UI: дублировать через tap/state + `@media (hover: hover)` (см. Chat actions, ActionMenu rows)
 
 ## Состояние
 - Локальное — useState (Chat — TEMP до backend)
-- Глобальное (транзакции, теги, пользователь) — zustand
+- Глобальное (транзакции, теги, пользователь, action-menu open/close) — zustand
 - Не использовать prop drilling глубже 2 уровней
 
 ## Паттерн страницы

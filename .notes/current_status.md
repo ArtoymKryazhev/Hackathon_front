@@ -5,27 +5,31 @@
 
 ## Что сделано недавно
 
-### Chat (`/chat`) и история (`/chat/history`)
-- [x] **Chat** — шапка (BackButton, история, Cash Ask), список сообщений из `chatMocks.js`
-  - пузыри user/AI, hover-actions (like/dislike/copy/share), copy + share работают
-  - tap-to-fix на touch, hover на desktop (`activeMessageId`)
-  - quick questions в скролле чата → подстановка в input
-  - input-панель (controlled), TEMP send/voice/attachments
-- [x] **ChatHistory** — секции «Проекты» / «Недавние», моки, «Новый чат» → `/chat`, «Выйти из чата» → `/`
-- [x] **BackButton** в шапках Chat и ChatHistory
-- [x] **Моки** — `src/lib/mocks/chatMocks.js` (messages, quickQuestions, chatHistory)
+### Global Action Menu (кнопка «+» в BottomNav)
+- [x] **Инфраструктура** — `useActionMenuStore`, `ActionMenu` в `AppShell` (портал), открытие из BottomNav
+- [x] **UI по Figma** (`1033:8` / `817:1524`) — frosted-glass карточка 354px, иконка + текст, разделитель `#DBDBDB`
+- [x] **Route-aware конфиг** — `actionMenuRouteMap.js` + `actionMenuPresets.js` (разные preset по pathname)
+- [x] **UX** — закрытие overlay / Escape / пункт; без затемнения всего экрана; hover строк (Apple-like) на desktop
+- [x] **Иконки** — `src/assets/icons/modal_menu/`
+- [x] **Handlers** — `actionMenuHandlers.js` (заглушки, без бизнес-логики)
 
-### Ранее (ProductEdit, Accounts, …)
-- [x] Иконки банков, ProductEdit, TEMP client-side CRUD продуктов
+### Chat (`/chat`) и история (`/chat/history`)
+- [x] **Chat** — шапка, сообщения из `chatMocks.js`, actions, quick questions, input TEMP
+- [x] **ChatHistory** — секции из моков, навигация
+- [x] **BackButton** в шапках Chat и ChatHistory
+
+### Ранее
+- [x] ProductEdit, Accounts, иконки банков, TEMP client-side CRUD
 - [x] Home, Transactions, TransactionStats, AppShell, auth/products API
 
 ## В процессе
+- [ ] **Разные наполнения меню по экранам** — архитектура готова; финальные пункты после согласования с дизайном
 - [ ] **Mapper продуктов** — формат `GET /api/products/` vs поля UI
 - [ ] **Backend CRUD продуктов** — заменить TEMP save/delete
 
 ## Осталось (до хакатона)
-- [ ] Реальная отправка сообщений и AI-интеграция в Chat
-- [ ] Открытие конкретного проекта/чата из ChatHistory
+- [ ] Реальные `actionKey` → навигация / API (новая трата, выписка, цель, …)
+- [ ] Реальная отправка сообщений и AI в Chat
 - [ ] Фильтры (`/transactions/filter`), тег (`/transactions/tags/:tagId`)
 - [ ] API: транзакции, платежи, теги
 - [ ] Иконки сервисов в PaymentCard и TransactionItem
@@ -34,6 +38,7 @@
 - ESLint warning в `ChipCarousel`, `AppShell` (exhaustive-deps)
 - Chat: сообщения и input — локальный state (TEMP), не zustand
 - `fetchProducts` при успехе API пока не подменяет `products` в store
+- Action menu: overlay прозрачный — фон страницы виден; scroll-lock body пока меню открыто
 
 ## Стек
 React + Vite | JavaScript | CSS Modules | zustand | recharts | axios | react-router-dom
@@ -42,25 +47,34 @@ React + Vite | JavaScript | CSS Modules | zustand | recharts | axios | react-rou
 - **Base URL:** `https://cashapps.ru`
 - **Auth:** `POST /auth/access/` | **Products:** `GET /api/products/` + Bearer
 
+## Ключевые сущности (action menu)
+- **Store:** `useActionMenuStore` — `isOpen`, `open`, `close`
+- **UI:** `src/components/ActionMenu/`
+- **Конфиг:** `src/lib/actionMenu/actionMenuPresets.js`, `actionMenuRouteMap.js`
+- **Handlers:** `src/lib/actionMenu/actionMenuHandlers.js` (заглушки)
+
 ## Роутинг
-- С BottomNav: `/`, `/transactions`, `/settings`
-- Без BottomNav: `/accounts`, `/products/:id`, `/transactions/stats`, `/transactions/filter`, `/transactions/tags/:tagId`, `/chat`, `/chat/history`, `/profile`
+- С BottomNav: `/`, `/transactions`, `/settings` (+ action menu через «+»)
+- Без BottomNav: `/accounts`, `/products/:id`, `/transactions/stats`, …, `/chat`, `/chat/history`, `/profile`
+- `ActionMenu` монтируется в `AppShell` на всех layout; «+» только где есть BottomNav
 
 ## Состояние страниц
 | Страница | Роут | Статус |
 |----------|------|--------|
-| Home | `/` | ✅ |
+| Home | `/` | ✅ + action menu |
+| Transactions | `/transactions` | ✅ моки + action menu |
+| Settings | `/settings` | 🔶 заглушка + action menu |
 | Accounts | `/accounts` | ✅ |
 | ProductEdit | `/products/:id` | ✅ TEMP CRUD |
-| Transactions | `/transactions` | ✅ моки |
 | TransactionStats | `/transactions/stats` | ✅ |
 | Chat | `/chat` | ✅ UI + локальное поведение |
 | ChatHistory | `/chat/history` | ✅ UI + навигация |
 | TransactionFilter | `/transactions/filter` | 🔶 заглушка |
 | TransactionTag | `/transactions/tags/:tagId` | 🔶 заглушка |
-| Settings, Profile | … | 🔶 заглушки |
+| Profile | `/profile` | 🔶 заглушка |
 
 ## Следующий этап
-1. Chat: отправка сообщений + backend/AI
-2. Mapper products + backend CRUD
-3. API транзакций/платежей
+1. Action menu: финальные пункты по экранам + реальные handlers
+2. Chat: отправка + backend/AI
+3. Mapper products + backend CRUD
+4. API транзакций/платежей

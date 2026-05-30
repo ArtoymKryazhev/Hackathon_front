@@ -1,5 +1,8 @@
 import { useLocation, useNavigate } from 'react-router-dom'
 
+import { ACTION_MENU_DIALOG_ID } from '../../lib/actionMenu/actionMenuConstants.js'
+import { useActionMenuStore } from '../../stores/useActionMenuStore.js'
+
 import iconMenu from '../../assets/icons/icon-menu.svg'
 import iconWallet from '../../assets/icons/icon-wallet.svg'
 import iconTasks from '../../assets/icons/icon-tasks.svg'
@@ -36,6 +39,8 @@ const NAV_ITEMS = [
 export function BottomNav() {
   const navigate = useNavigate()
   const { pathname } = useLocation()
+  const isActionMenuOpen = useActionMenuStore((state) => state.isOpen)
+  const openActionMenu = useActionMenuStore((state) => state.open)
 
   return (
     <nav className={styles.root} aria-label="Нижняя навигация">
@@ -62,11 +67,26 @@ export function BottomNav() {
 
       <button
         type="button"
-        className={styles.plusButton}
-        aria-label="Добавить"
-        onClick={() => {}}
+        className={[styles.plusButton, isActionMenuOpen ? styles.plusButtonOpen : null]
+          .filter(Boolean)
+          .join(' ')}
+        aria-label={isActionMenuOpen ? 'Меню открыто' : 'Добавить'}
+        aria-expanded={isActionMenuOpen}
+        aria-controls={ACTION_MENU_DIALOG_ID}
+        onClick={() => {
+          if (!isActionMenuOpen) {
+            openActionMenu()
+          }
+        }}
       >
-        <img className={styles.plusIcon} src={iconPlus} alt="" aria-hidden="true" />
+        <img
+          className={[styles.plusIcon, isActionMenuOpen ? styles.plusIconOpen : null]
+            .filter(Boolean)
+            .join(' ')}
+          src={iconPlus}
+          alt=""
+          aria-hidden="true"
+        />
       </button>
     </nav>
   )

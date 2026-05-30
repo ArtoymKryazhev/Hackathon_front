@@ -17,12 +17,13 @@ Mobile-first. Аудитория — люди без финансовой экс
 
 ## Структура папок
 - src/shared/ui/      — атомарные UI-компоненты (Button, Input, Card)
-- src/components/     — составные блоки страниц
+- src/components/     — составные блоки (AppShell, BottomNav, ActionMenu)
 - src/pages/          — экраны целиком
 - src/stores/         — zustand-сторы (не src/store/)
 - src/lib/api/        — axios-функции (не src/api/)
 - src/lib/mocks|utils|constants|hooks — данные и вспомогательная логика
 - Chat/ChatHistory — UI на моках (`chatMocks.js`), без API; TEMP до AI/backend
+- ActionMenu — глобальное меню по «+» в BottomNav; конфиг в `lib/actionMenu/`; handlers — заглушки
 
 ## НЕЛЬЗЯ
 - Не добавлять TypeScript

@@ -3,7 +3,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  z-index: 100;
+  z-index: var(--z-bottom-nav);
   height: var(--bottom-nav-offset);
   padding-bottom: env(safe-area-inset-bottom);
   pointer-events: none;
@@ -64,6 +64,7 @@
   position: absolute;
   right: 34px;
   bottom: calc(18px + env(safe-area-inset-bottom));
+  z-index: 1;
   width: 62px;
   height: 62px;
   border: 0;
@@ -84,6 +85,16 @@
   width: 26px;
   height: 26px;
   display: block;
+  transition: transform var(--action-menu-duration) ease;
+}
+
+.plusButtonOpen {
+  position: fixed;
+  z-index: calc(var(--z-action-menu) + 1);
+}
+
+.plusIconOpen {
+  transform: rotate(45deg);
 }
 
 .item:focus-visible,

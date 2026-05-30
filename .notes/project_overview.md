@@ -1,18 +1,18 @@
 # FinHelper — обзор проекта
 
 ## Суть
-Мобильный финансовый помощник (MVP, mobile-first). Баланс и продукты банка, траты, платежи, аналитика; редактирование продуктов; AI-чат Cash Ask (UI готов, бэкенд — позже).
+Мобильный финансовый помощник (MVP, mobile-first). Баланс и продукты банка, траты, платежи, аналитика; редактирование продуктов; глобальное action-menu по «+»; AI-чат Cash Ask (UI готов, бэкенд — позже).
 
 ## Ключевые экраны (MVP)
 | Экран | Роут | Статус |
 |-------|------|--------|
-| Home / меню | `/` | ✅ |
+| Home / меню | `/` | ✅ + action menu |
 | Банковские продукты | `/accounts` | ✅ |
 | Редактирование продукта | `/products/:id` | ✅ TEMP save/delete |
-| Транзакции и платежи | `/transactions` | ✅ моки |
+| Транзакции и платежи | `/transactions` | ✅ моки + action menu |
 | Аналитика | `/transactions/stats` | ✅ |
-| Чат Cash Ask | `/chat` | ✅ UI, моки, локальный input |
-| История чатов | `/chat/history` | ✅ UI, моки |
+| Чат Cash Ask | `/chat` | ✅ UI, моки |
+| История чатов | `/chat/history` | ✅ UI |
 | Фильтры / тег / settings / profile | … | 🔶 заглушки |
 
 ## Стек
@@ -24,17 +24,23 @@ React + Vite, JavaScript, CSS Modules, zustand, react-router-dom, recharts, axio
 - **Products:** `GET /api/products/`; CRUD — пока на фронте (TEMP)
 
 ## Структура кода
-- `src/pages/` — Chat/, ChatHistory/, ProductEdit/, …
-- `src/shared/ui/` — ProductCard, AiChatWidget, BackButton, …
-- `src/lib/mocks/` — bankProducts, chatMocks, …
-- `src/stores/` — useAuthStore, useAccountsStore, useTransactionsStore
+- `src/pages/` — экраны
+- `src/components/` — AppShell, BottomNav, **ActionMenu**
+- `src/shared/ui/` — ProductCard, BackButton, …
+- `src/lib/actionMenu/` — presets, route map, handlers, hooks
+- `src/stores/` — auth, accounts, transactions, **useActionMenuStore**
+- `src/assets/icons/modal_menu/` — иконки пунктов action menu
 
 ## Поток данных
 ```
 AppShell → fetchUser → fetchProducts → Outlet
+         → ActionMenu (портал, zustand isOpen)
 
-Chat: chatMocks + useState (TEMP) — без store и без API
+BottomNav «+» → useActionMenuStore.open()
+ActionMenu → getActionMenuItems(pathname) → пункты → handlers (заглушки)
+
 Accounts → ProductEdit → TEMP save/delete → useAccountsStore
+Chat: chatMocks + useState (TEMP)
 ```
 
 Подробный статус — `.notes/current_status.md`.
