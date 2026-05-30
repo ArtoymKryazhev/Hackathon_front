@@ -1,48 +1,40 @@
 # FinHelper — обзор проекта
 
 ## Суть
-Мобильный финансовый помощник (MVP, mobile-first). Баланс и продукты банка, траты за месяц, платежи, история операций, аналитика по категориям и тегам; редактирование продуктов; далее — фильтры, чат, цели, импорт выписок.
+Мобильный финансовый помощник (MVP, mobile-first). Баланс и продукты банка, траты, платежи, аналитика; редактирование продуктов; AI-чат Cash Ask (UI готов, бэкенд — позже).
 
 ## Ключевые экраны (MVP)
 | Экран | Роут | Статус |
 |-------|------|--------|
-| Home / меню | `/` | ✅ UI; продукты из store (API + fallback моки) |
-| Банковские продукты | `/accounts` | ✅ список с иконками банков; клик → редактирование |
-| Редактирование продукта | `/products/:id` | ✅ форма, предпросмотр, TEMP save/delete |
-| Транзакции и платежи | `/transactions` | ✅ UI по Figma (моки) |
-| Аналитика транзакций | `/transactions/stats` | ✅ donut recharts, теги, сводка |
-| Категория (тег) | `/transactions/tags/:tagId` | 🔶 заглушка |
-| Фильтры операций | `/transactions/filter` | 🔶 заглушка |
-| Чат (Cash Ask) | `/chat` | 🔶 заглушка |
-| Задачи / настройки | `/settings` | 🔶 заглушка |
-| Профиль | `/profile` | 🔶 заглушка |
+| Home / меню | `/` | ✅ |
+| Банковские продукты | `/accounts` | ✅ |
+| Редактирование продукта | `/products/:id` | ✅ TEMP save/delete |
+| Транзакции и платежи | `/transactions` | ✅ моки |
+| Аналитика | `/transactions/stats` | ✅ |
+| Чат Cash Ask | `/chat` | ✅ UI, моки, локальный input |
+| История чатов | `/chat/history` | ✅ UI, моки |
+| Фильтры / тег / settings / profile | … | 🔶 заглушки |
 
-Планируется: backend CRUD продуктов, API транзакций/платежей, полноценный AI-чат, цели и импорт PDF/QR.
-
-## Стек (frontend)
+## Стек
 React + Vite, JavaScript, CSS Modules, zustand, react-router-dom, recharts, axios.
 
 ## Бэкенд
-- **Prod / dev proxy target:** `https://cashapps.ru`
-- **Авторизация (demo-user):** `POST /auth/access/` — без логина/пароля
-- **Токены:** только в памяти (`auth.js`), не localStorage
-- **Products:** `GET /api/products/` с Bearer; save/delete — пока client-side (TEMP)
+- **URL:** `https://cashapps.ru`
+- **Auth:** `POST /auth/access/` (demo-user), токены только в памяти
+- **Products:** `GET /api/products/`; CRUD — пока на фронте (TEMP)
 
-## Структура кода (кратко)
-- `src/pages/` — экраны (`ProductEdit/`, `Transactions/Stats/`, …)
-- `src/shared/ui/` — ProductCard, DonutChartCard, …
-- `src/components/` — AppShell, BottomNav
-- `src/stores/` — useAuthStore, useAccountsStore (+ update/remove product), useTransactionsStore
-- `src/lib/api/` — auth, apiClient, products
-- `src/lib/constants/` — bankIconMap, productTypeMap, productTypeTitleMap, …
-- `src/lib/mocks|utils|hooks` — данные и логика
+## Структура кода
+- `src/pages/` — Chat/, ChatHistory/, ProductEdit/, …
+- `src/shared/ui/` — ProductCard, AiChatWidget, BackButton, …
+- `src/lib/mocks/` — bankProducts, chatMocks, …
+- `src/stores/` — useAuthStore, useAccountsStore, useTransactionsStore
 
 ## Поток данных
 ```
 AppShell → fetchUser → fetchProducts → Outlet
 
-Accounts: useAccountsStore.products → ProductCard (иконка по bank_name)
-  → /products/:id → ProductEdit → saveProduct (TEMP) → store
+Chat: chatMocks + useState (TEMP) — без store и без API
+Accounts → ProductEdit → TEMP save/delete → useAccountsStore
 ```
 
-Подробный статус — в `.notes/current_status.md`.
+Подробный статус — `.notes/current_status.md`.

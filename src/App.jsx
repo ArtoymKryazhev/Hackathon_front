@@ -9,6 +9,7 @@ import { TransactionStats } from './pages/Transactions/Stats/TransactionStats.js
 import { TransactionFilter } from './pages/TransactionFilter/TransactionFilter.jsx'
 import { TransactionTag } from './pages/TransactionTag/TransactionTag.jsx'
 import { Chat } from './pages/Chat/Chat.jsx'
+import { ChatHistory } from './pages/ChatHistory/ChatHistory.jsx'
 import { Settings } from './pages/Settings/Settings.jsx'
 import { Profile } from './pages/Profile/Profile.jsx'
 import { ProductEdit } from './pages/ProductEdit/ProductEdit.jsx'
@@ -36,6 +37,7 @@ function App() {
         <Route path="/transactions/stats" element={<TransactionStats />} />
         <Route path="/transactions/filter" element={<TransactionFilter />} />
         <Route path="/transactions/tags/:tagId" element={<TransactionTag />} />
+        <Route path="/chat/history" element={<ChatHistory />} />
         <Route path="/chat" element={<Chat />} />
         <Route path="/profile" element={<Profile />} />
       </Route>

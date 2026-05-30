@@ -22,6 +22,7 @@ Mobile-first. Аудитория — люди без финансовой экс
 - src/stores/         — zustand-сторы (не src/store/)
 - src/lib/api/        — axios-функции (не src/api/)
 - src/lib/mocks|utils|constants|hooks — данные и вспомогательная логика
+- Chat/ChatHistory — UI на моках (`chatMocks.js`), без API; TEMP до AI/backend
 
 ## НЕЛЬЗЯ
 - Не добавлять TypeScript

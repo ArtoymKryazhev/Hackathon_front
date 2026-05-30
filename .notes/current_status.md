@@ -3,79 +3,64 @@
 ## Последнее обновление
 30 мая 2026
 
-## Что сделано (с последнего коммита `231d4dc`)
+## Что сделано недавно
 
-### Продукты: иконки, список, редактирование
-- [x] **Иконки банков** — `src/lib/constants/bankIconMap.js`, SVG в `src/assets/icons/`
-  - маппинг по `bank_name`; full-bleed для T-Bank, Ozon, Яндекс, Wildberries
-  - отображение в `ProductCard` (Accounts)
-- [x] **Моки продуктов** — все 11 банков; `account_number` у debit/credit карт для тестов
-- [x] **Accounts** — карточки кликабельны → `/products/:id`
-- [x] **ProductEdit** (`/products/:id`) — форма редактирования по Figma
-  - предпросмотр (`ProductCard`, `interactive={false}`)
-  - поля: имя, баланс, валюта + банк в одну строку, номер карты (только debit/credit)
-  - заголовок через `productTypeTitleMap.js`
-  - валидация `account_number` (4 цифры); credit_card — минус в amount на save/preview
-- [x] **Временный client-side CRUD** — `saveProduct` / `deleteProduct` в `lib/api/products.js` + `lib/products/clientProductCrud.js` (TEMP/TODO до backend)
-- [x] **`useAccountsStore`** — `updateProduct`, `removeProduct`
+### Chat (`/chat`) и история (`/chat/history`)
+- [x] **Chat** — шапка (BackButton, история, Cash Ask), список сообщений из `chatMocks.js`
+  - пузыри user/AI, hover-actions (like/dislike/copy/share), copy + share работают
+  - tap-to-fix на touch, hover на desktop (`activeMessageId`)
+  - quick questions в скролле чата → подстановка в input
+  - input-панель (controlled), TEMP send/voice/attachments
+- [x] **ChatHistory** — секции «Проекты» / «Недавние», моки, «Новый чат» → `/chat`, «Выйти из чата» → `/`
+- [x] **BackButton** в шапках Chat и ChatHistory
+- [x] **Моки** — `src/lib/mocks/chatMocks.js` (messages, quickQuestions, chatHistory)
 
-### Без изменений с `231d4dc`
-- [x] API auth/products, AppShell bootstrap, Home, Transactions, TransactionStats, BottomNav
+### Ранее (ProductEdit, Accounts, …)
+- [x] Иконки банков, ProductEdit, TEMP client-side CRUD продуктов
+- [x] Home, Transactions, TransactionStats, AppShell, auth/products API
 
 ## В процессе
-- [ ] **Mapper продуктов** — формат ответа `GET /api/products/` может не совпадать с полями моков (`product_type`, `amount`, `account_number`, …)
-- [ ] **Backend CRUD продуктов** — заменить TEMP save/delete на PUT/PATCH и DELETE
+- [ ] **Mapper продуктов** — формат `GET /api/products/` vs поля UI
+- [ ] **Backend CRUD продуктов** — заменить TEMP save/delete
 
 ## Осталось (до хакатона)
-- [ ] Реальная логика фильтров (`/transactions/filter`)
-- [ ] Контент страницы тега (`/transactions/tags/:tagId`)
+- [ ] Реальная отправка сообщений и AI-интеграция в Chat
+- [ ] Открытие конкретного проекта/чата из ChatHistory
+- [ ] Фильтры (`/transactions/filter`), тег (`/transactions/tags/:tagId`)
 - [ ] API: транзакции, платежи, теги
 - [ ] Иконки сервисов в PaymentCard и TransactionItem
-- [ ] Тонкие визуальные правки Home / Transactions (кэшбэк в списке)
-
-## На хакатоне
-- [ ] Полная интеграция с бэкендом (транзакции, платежи, теги, CRUD продуктов)
-- [ ] Развитие чата
-- [ ] Доп. экраны: цели/накопления/импорт — если успеем
 
 ## Известные проблемы
 - ESLint warning в `ChipCarousel`, `AppShell` (exhaustive-deps)
-- Доли на donut — визуальные (мин. сегмент), в легенде — фактические суммы
-- В dev React StrictMode — двойной вызов `fetchUser` / `fetchProducts`
-- `<select>` на ProductEdit — кастом только закрытое состояние; popup рисует ОС
-- `fetchProducts` при успехе API пока не подменяет `products` в store (fallback моки при ошибке)
+- Chat: сообщения и input — локальный state (TEMP), не zustand
+- `fetchProducts` при успехе API пока не подменяет `products` в store
 
 ## Стек
 React + Vite | JavaScript | CSS Modules | zustand | recharts | axios | react-router-dom
 
-## Бэкенд (актуально)
+## Бэкенд
 - **Base URL:** `https://cashapps.ru`
-- **Auth:** `POST /auth/access/` → `{ access_token, refresh_token, user }`
-- **Refresh:** `POST /auth/refresh/`
-- **Products:** `GET /api/products/` + Bearer (save/delete — пока только на фронте)
+- **Auth:** `POST /auth/access/` | **Products:** `GET /api/products/` + Bearer
 
-## Ключевые сущности
-- **API:** `src/lib/api/` — auth, axiosInstance, products (+ TEMP save/delete)
-- **Constants:** `bankIconMap`, `productTypeTitleMap`, `productEditOptions`, `productTypeMap`
-- **Сторы:** `useAuthStore`, `useAccountsStore`, `useTransactionsStore`
-- **Роутинг** (`App.jsx`):
-  - С BottomNav: `/`, `/transactions`, `/settings`
-  - Без BottomNav: `/accounts`, `/products/:id`, `/transactions/stats`, `/transactions/filter`, `/transactions/tags/:tagId`, `/chat`, `/profile`
+## Роутинг
+- С BottomNav: `/`, `/transactions`, `/settings`
+- Без BottomNav: `/accounts`, `/products/:id`, `/transactions/stats`, `/transactions/filter`, `/transactions/tags/:tagId`, `/chat`, `/chat/history`, `/profile`
 
 ## Состояние страниц
 | Страница | Роут | Статус |
 |----------|------|--------|
-| Home | `/` | ✅ UI; продукты из store |
-| Accounts | `/accounts` | ✅ UI; иконки банков; переход в редактирование |
-| ProductEdit | `/products/:id` | ✅ форма + TEMP save/delete |
+| Home | `/` | ✅ |
+| Accounts | `/accounts` | ✅ |
+| ProductEdit | `/products/:id` | ✅ TEMP CRUD |
 | Transactions | `/transactions` | ✅ моки |
-| TransactionStats | `/transactions/stats` | ✅ UI + recharts |
+| TransactionStats | `/transactions/stats` | ✅ |
+| Chat | `/chat` | ✅ UI + локальное поведение |
+| ChatHistory | `/chat/history` | ✅ UI + навигация |
 | TransactionFilter | `/transactions/filter` | 🔶 заглушка |
 | TransactionTag | `/transactions/tags/:tagId` | 🔶 заглушка |
-| Settings, Chat, Profile | … | 🔶 заглушки |
+| Settings, Profile | … | 🔶 заглушки |
 
 ## Следующий этап
-1. **Mapper products** — ответ API → поля UI
-2. **Backend CRUD продуктов** — вместо TEMP client-side
-3. **Фильтры** — `/transactions/filter`
-4. **API транзакций/платежей**
+1. Chat: отправка сообщений + backend/AI
+2. Mapper products + backend CRUD
+3. API транзакций/платежей
