@@ -5,6 +5,7 @@ import {
   PRODUCT_TYPE_TO_CATEGORY_ID,
 } from '../lib/constants/productTypeMap.js'
 import { bankProducts } from '../lib/mocks/bankProducts.js'
+import { mapApiProductsToClient } from '../lib/products/mapApiProductToClient.js'
 
 const ALL_CATEGORY_ID = 'all'
 
@@ -32,9 +33,11 @@ export const useAccountsStore = create((set, get) => ({
 
     try {
       const { getProducts } = await import('../lib/api/products.js')
-      await getProducts()
+      const rawProducts = await getProducts()
+      const products = mapApiProductsToClient(rawProducts)
 
       set({
+        products: products.length > 0 ? products : bankProducts,
         productsLoading: false,
         productsLoaded: true,
         productsError: null,

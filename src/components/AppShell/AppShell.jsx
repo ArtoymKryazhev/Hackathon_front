@@ -3,6 +3,7 @@ import { Outlet, useLocation } from 'react-router-dom'
 
 import { useAccountsStore } from '../../stores/useAccountsStore.js'
 import { useAuthStore } from '../../stores/useAuthStore.js'
+import { useTransactionsStore } from '../../stores/useTransactionsStore.js'
 import { ActionMenu } from '../ActionMenu/ActionMenu.jsx'
 import { BottomNav } from '../BottomNav/BottomNav.jsx'
 
@@ -17,6 +18,9 @@ export function AppShell({ withBottomNav }) {
   const fetchProducts = useAccountsStore((state) => state.fetchProducts)
   const productsLoaded = useAccountsStore((state) => state.productsLoaded)
 
+  const fetchOperations = useTransactionsStore((state) => state.fetchOperations)
+  const transactionsLoaded = useTransactionsStore((state) => state.transactionsLoaded)
+
   useEffect(() => {
     let cancelled = false
 
@@ -25,7 +29,7 @@ export function AppShell({ withBottomNav }) {
       if (cancelled) return
 
       if (useAuthStore.getState().user) {
-        await fetchProducts()
+        await Promise.all([fetchProducts(), fetchOperations()])
       }
     }
 
@@ -48,7 +52,8 @@ export function AppShell({ withBottomNav }) {
 
   const isAuthPending = authLoading || (!user && !authError)
   const isProductsPending = Boolean(user) && !productsLoaded
-  const isLoading = isAuthPending || isProductsPending
+  const isTransactionsPending = Boolean(user) && !transactionsLoaded
+  const isLoading = isAuthPending || isProductsPending || isTransactionsPending
 
   let mainContent
   if (authError) {

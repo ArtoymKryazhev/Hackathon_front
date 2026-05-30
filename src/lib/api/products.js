@@ -13,6 +13,16 @@ export async function getProducts() {
   return normalizeProductsResponse(data)
 }
 
+/** Raw GET для debug-разведки — не пишет в store. */
+export async function getProductsRaw() {
+  const response = await apiClient.get('/products/')
+  return {
+    status: response.status,
+    data: response.data,
+    headers: response.headers,
+  }
+}
+
 /**
  * TEMP / TODO: сейчас обновляет zustand локально.
  * После появления backend — PUT/PATCH /api/products/:id/ с тем же payload.

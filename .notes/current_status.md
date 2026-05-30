@@ -5,42 +5,45 @@
 
 ## Что сделано недавно
 
+### Backend-интеграция
+- [x] **Products GET** — `fetchProducts()` + `mapApiProductToClient.js`; Home/Accounts/ProductEdit из API; fallback `bankProducts`
+- [x] **Operations GET** — `fetchOperations()` + `mapApiOperationToClient.js`; Stats/Category/Filter из API (~525 ops, пагинация); fallback `MOCK_TRANSACTIONS`
+- [x] **Services / Categories GET** — `useReferenceStore` (TEMP) → ActionMenu «Новая трата»; fallback mock helpers; TEMP exclude income categories
+- [x] **Chat POST** — `lib/api/chat.js` → `POST /api/chat/message/` (`content`); `/chat` UI: send, quick questions, loading; proxy `/api/chat` → `/chat`
+- [x] **Profile** — debug-блок API-разведки (`/profile`): products, services, categories, operations
+
 ### Action Menu — «Новая трата» (Figma `814:1013`, `1083:*`)
-- [x] **Шаг 1** — сумма + категория; зелёная стрелка → шаг 2
-- [x] **Шаг 2** — сетка 2×2: счёт / кешбэк / магазин (`GlassSelect compact`) / дата
-- [x] **Date-picker** — `?from=newExpense`: одна дата, Back = сохранить; меню скрывается на время календаря; черновик в `useActionMenuStore.newExpenseDraft`
-- [x] **Подтверждение** — `submitNewExpense.js`: списание `updateProduct` + транзакция в `useTransactionsStore` (TEMP, сессия)
-- [x] **Экран «Успешно»** — Figma `1083:103`, авто-закрытие 3 сек; «Сохранить шаблон?» — заглушка
-- [x] **«Новое поступление»** — сумма + счёт, `updateProduct` (без записи транзакции)
+- [x] Шаг 1–2, date-picker, success, submit (TEMP локально в zustand)
+- [x] Категории/магазины из API справочников (не из MOCK_TRANSACTIONS)
 
 ### TransactionFilter и date-picker
-- [x] **`useFilterStore`** — категории, период, счета, операции
-- [x] **`/transactions/filter`** — UI Figma `853:410`
-- [x] **`/transactions/filter/date-picker`** — календарь Figma `853:457`; фильтры: 1–2 даты; expense-режим отдельно
-- [x] **TransactionStats** / **TransactionCategory** — фильтры из `useFilterStore`
+- [x] `useFilterStore`, UI фильтров, date-picker, Stats/Category с фильтрами
 
 ### Ранее (UI)
-- [x] GlassSelect (+ `size="compact"`), Home, ProductEdit, Accounts, Chat, dashboard `814:1087`, TEMP CRUD, auth/products API
+- [x] GlassSelect, Home, ProductEdit, Accounts, dashboard `814:1087`, auth bootstrap
 
 ## В процессе
-- [ ] **Action menu** — остальные пункты (`uploadStatement`, `createGoal`, …) + handlers
-- [ ] **Новое поступление** — запись `income` в `useTransactionsStore`
+- [ ] **Action menu** — остальные пункты + handlers
+- [ ] **Новое поступление** — запись `income` в store / API
+- [ ] **submitNewExpense** — POST operations вместо локального prepend
 - [ ] **TransactionCategory** — логика TEMP-чипов vs `useFilterStore`
-- [ ] **Mapper продуктов** / **Backend CRUD продуктов**
+- [ ] **Backend CRUD products** — save/delete пока TEMP на фронте
 
 ## Осталось (до хакатона)
-- [ ] API транзакций (persist после F5)
-- [ ] Кешбэк в модели транзакции (поле в форме есть, в submit не пишется)
-- [ ] Dashboard `/transactions` — читать store / monthlySpending
-- [ ] Chat: отправка + backend/AI
+- [ ] Dashboard `/transactions` — читать store / monthlySpending (debt donut)
+- [ ] Кешбэк в submit / модели транзакции
+- [ ] ChatHistory — API истории сессий
+- [ ] Оптимизация загрузки operations (35 запросов при старте)
 - [ ] **TransactionTag** — заглушка
 - [ ] Иконки сервисов в PaymentCard и TransactionItem
 
 ## Известные проблемы
 - ESLint warning в `ChipCarousel`, `AppShell` (exhaustive-deps)
-- Chat: локальный state (TEMP), не zustand
-- `fetchProducts` при успехе API пока не подменяет `products` в store
-- Траты из action menu — только в памяти; F5 сбрасывает моки
+- Chat: локальный `useState` (не zustand); ответ AI 15–25 сек
+- `transfer` → `expense` в mapper operations (TEMP)
+- `useReferenceStore` — TEMP; income categories — hardcoded exclude-list
+- Action menu submit — локально; F5 сбрасывает новые траты до API POST
+- Operations: 35 параллельных page-запросов при bootstrap
 - TransactionCategory: чипы — визуальные TEMP
 
 ## Стек
@@ -48,8 +51,11 @@ React + Vite | JavaScript | CSS Modules | zustand | recharts | axios | react-rou
 
 ## Бэкенд
 - **Base URL:** `https://cashapps.ru`
-- **Auth:** `POST /auth/access/` | **Products:** `GET /api/products/` + Bearer
-- **Transactions:** нет API
+- **Auth:** `POST /auth/access/` | **Products:** `GET /api/products/`
+- **Operations:** `GET /api/operations/` (paginated `{ count, results, next }`)
+- **Services:** `GET /api/services/` | **Categories:** `GET /api/categories/`
+- **Chat:** `POST /chat/message/` body `{ content }` — через proxy `/api/chat/message/`
+- **Products CRUD / Operations POST:** пока TEMP на фронте
 
 ## Роутинг
 - С BottomNav: `/`, `/transactions`
@@ -58,22 +64,22 @@ React + Vite | JavaScript | CSS Modules | zustand | recharts | axios | react-rou
 ## Состояние страниц
 | Страница | Роут | Статус |
 |----------|------|--------|
-| Home | `/` | ✅ + action menu |
-| Transactions | `/transactions` | ✅ dashboard 814:1087 |
-| TransactionStats | `/transactions/stats` | ✅ + фильтры |
-| TransactionCategory | `/transactions/categories/:categoryKey` | ✅ + фильтры |
-| TransactionFilter | `/transactions/filter` | ✅ Figma 853:410 |
-| DatePickerPlaceholder | `/transactions/filter/date-picker` | ✅ + expense mode |
+| Home | `/` | ✅ + API products |
+| Transactions | `/transactions` | ✅ dashboard (debt donut — мок на странице) |
+| TransactionStats | `/transactions/stats` | ✅ + API operations + фильтры |
+| TransactionCategory | `/transactions/categories/:categoryKey` | ✅ + API + фильтры |
+| TransactionFilter | `/transactions/filter` | ✅ |
+| DatePickerPlaceholder | `/transactions/filter/date-picker` | ✅ |
 | Settings | `/settings` | 🔶 заглушка |
-| Accounts | `/accounts` | ✅ |
-| ProductEdit | `/products/:id` | ✅ TEMP CRUD |
-| Chat | `/chat` | ✅ UI |
-| ChatHistory | `/chat/history` | ✅ UI |
+| Accounts | `/accounts` | ✅ API products |
+| ProductEdit | `/products/:id` | ✅ + TEMP save/delete |
+| Chat | `/chat` | ✅ API send (`/chat/message/`) |
+| ChatHistory | `/chat/history` | ✅ UI, моки |
 | TransactionTag | `/transactions/tags/:tagId` | 🔶 заглушка |
-| Profile | `/profile` | 🔶 заглушка |
+| Profile | `/profile` | 🔶 + debug API |
 
 ## Следующий этап
-1. API / persist транзакций; кешбэк в submit
-2. Action menu: остальные пункты + income → transactions
-3. Dashboard `/transactions` ← store
-4. Chat + mapper products + backend CRUD
+1. POST operations из action menu; persist после F5
+2. Dashboard `/transactions` ← store
+3. ChatHistory + session API
+4. Backend CRUD products; оптимизация pagination operations

@@ -3,6 +3,7 @@ import { create } from 'zustand'
 import { MOCK_MONTHLY_SPENDING } from '../lib/mocks/monthlySpending.js'
 import { MOCK_PAYMENTS } from '../lib/mocks/payments.js'
 import { MOCK_TRANSACTIONS } from '../lib/mocks/transactions.js'
+import { mapApiOperationsToClient } from '../lib/operations/mapApiOperationToClient.js'
 import { sortPaymentsByNearest } from '../lib/utils/paymentUtils.js'
 
 const toDateKey = (isoString) => {
@@ -41,6 +42,41 @@ export const useTransactionsStore = create((set, get) => ({
   payments: MOCK_PAYMENTS,
   transactions: MOCK_TRANSACTIONS,
   operationType: 'expense',
+  transactionsLoading: false,
+  transactionsLoaded: false,
+  transactionsError: null,
+
+  fetchOperations: async () => {
+    const { transactionsLoaded, transactionsLoading } = get()
+    if (transactionsLoaded || transactionsLoading) return
+
+    set({ transactionsLoading: true, transactionsError: null })
+
+    try {
+      const { listOperations } = await import('../lib/api/operations.js')
+      const rawOperations = await listOperations()
+      const transactions = mapApiOperationsToClient(rawOperations)
+
+      set({
+        transactions: transactions.length > 0 ? transactions : MOCK_TRANSACTIONS,
+        transactionsLoading: false,
+        transactionsLoaded: true,
+        transactionsError: null,
+      })
+    } catch (err) {
+      const message =
+        err.response?.data?.message ||
+        err.response?.data?.detail ||
+        err.message ||
+        'Failed to fetch operations'
+
+      set({
+        transactionsLoading: false,
+        transactionsLoaded: true,
+        transactionsError: message,
+      })
+    }
+  },
 
   setMonthlySpending: (data) => {
     set({ monthlySpending: data })

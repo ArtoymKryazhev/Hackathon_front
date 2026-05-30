@@ -11,6 +11,11 @@ export default defineConfig({
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ''),
       },
+      '/api/chat': {
+        target: 'https://cashapps.ru',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api\/chat/, '/chat'),
+      },
       '/api': {
         target: 'https://cashapps.ru',
         changeOrigin: true,

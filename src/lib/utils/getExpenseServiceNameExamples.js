@@ -1,6 +1,6 @@
 import { MOCK_TRANSACTIONS } from '../mocks/transactions.js'
 
-/** Примеры custom_service_name из моков. TEMP до backend. */
+/** TEMP fallback: custom_service_name из MOCK_TRANSACTIONS — см. useReferenceStore.applyMockFallback */
 export function getExpenseServiceNameExamples() {
   const names = new Set()
 

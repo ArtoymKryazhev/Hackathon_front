@@ -1,6 +1,6 @@
 import { MOCK_TRANSACTIONS } from '../mocks/transactions.js'
 
-/** Уникальные category_name из моков расходных операций. TEMP до backend. */
+/** TEMP fallback: category_name из MOCK_TRANSACTIONS — см. useReferenceStore.applyMockFallback */
 export function getExpenseCategories() {
   const names = new Set()
 

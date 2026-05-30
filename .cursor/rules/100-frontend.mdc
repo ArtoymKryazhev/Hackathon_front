@@ -25,15 +25,20 @@ alwaysApply: false
 - Длинные списки чата: `ref` на scroll-контейнер + `scrollTop = scrollHeight` в `useEffect` (не zustand)
 
 ## Состояние
-- Локальное — useState (Chat — TEMP до backend; выбор дат на date-picker — TEMP UI state)
-- Глобальное (транзакции, фильтры, пользователь, action-menu open/close) — zustand
-- **Фильтры операций** — отдельный `useFilterStore`; не смешивать с `useTransactionsStore.operationType`
+- Локальное — useState (Chat messages/session; date-picker UI state)
+- Глобальное — zustand: auth, accounts, transactions, filters, action-menu
+- **useReferenceStore** — TEMP: services/categories для ActionMenuNewExpense
+- **Фильтры операций** — `useFilterStore`; не смешивать с `useTransactionsStore.operationType`
 - Не использовать prop drilling глубже 2 уровней
 
 ## Паттерн страницы
 store → useMemo + утилиты → props в shared/ui
 Страницы только читают store, запросов к API не делают напрямую.
-Исключение (TEMP): `/transactions` dashboard — моки donut на странице; `/chat` — `useState` + `chatMocks.js`.
+Исключение (TEMP): `/transactions` dashboard — debt donut захардкожен на странице.
+
+## Bootstrap (AppShell)
+`fetchUser()` → `Promise.all([fetchProducts(), fetchOperations()])` → `<Outlet />`
+Mapper: `lib/products/mapApiProductToClient.js`, `lib/operations/mapApiOperationToClient.js`
 
 ## DonutChartCard
 - Общий компонент: `src/shared/ui/DonutChartCard/` (recharts)
@@ -41,21 +46,21 @@ store → useMemo + утилиты → props в shared/ui
 - **Debt-вариант** (Transactions): `centerText`, `hideLegendAmounts`, `legendFooter` — не ломать props при правках stats
 
 ## Транзакции / категории
-- Группировка по `category_name` — `calcTransactionStats.js` (`filterTransactionsByCategory`, `getCategoryRoutePath`, `applyTransactionFilters`)
-- **TransactionStats** / **TransactionCategory** — `useTransactionsStore.transactions` + фильтры из `useFilterStore` через `useMemo` + `applyTransactionFilters`
-- На **TransactionCategory** фильтр `selectedCategories` игнорируется (категория страницы уже задана роутом)
-- **TransactionFilter** (`853:410`) — UI фильтров; **DatePickerPlaceholder** (`853:457`) — календарь, `periodType: 'custom'`
-- **TransactionStats** — список «В этом месяце»; клик по `CategorySummaryCard` → `/transactions/categories/:categoryKey`
-- **TransactionCategory** (`1038:60`) — hero gradient + `BackButton variant="card"` (pill белый); чипы-фильтры TEMP; `TransactionItem`
-- **BackButton** — `variant="card"` на gradient hero категории и в формах ActionMenu (шаги «Новая трата» / «Новое поступление»)
+- Данные — `useTransactionsStore` (API operations + TEMP prepend из action menu)
+- Группировка по `category_name` — `calcTransactionStats.js`
+- **TransactionStats** / **TransactionCategory** — + `useFilterStore` через `applyTransactionFilters`
+- **TransactionFilter** (`853:410`); **DatePickerPlaceholder** (`853:457`)
+- **TransactionCategory** — hero gradient + `BackButton variant="card"`; чипы TEMP
 
 ## Action Menu (новая трата / поступление)
-- **Store:** `useActionMenuStore` — `activeScreen`: `list` | `newIncome` | `newExpense` | `newExpenseSuccess`; черновик `newExpenseDraft` (step `details`|`meta`, сумма, категория, счёт, магазин, кешбэк, дата)
-- **Компоненты:** `ActionMenuNewExpense`, `ActionMenuNewExpenseSuccess`, `ActionMenuNewIncome`; стили форм — `ActionMenuForm.module.css`
-- **Новая трата:** шаг 1 — сумма + категория; шаг 2 — сетка 2×2 (счёт, кешбэк, магазин, дата); шаг 3 — «Успешно» Figma `1083:103`, авто-закрытие 3 сек
-- **Сохранение:** `lib/actionMenu/submitNewExpense.js` — TEMP: `updateProduct` + prepend в `useTransactionsStore.transactions` (без API, без persist после F5)
-- **Date-picker:** `/transactions/filter/date-picker?from=newExpense` — одна дата, Back = подтверждение; фильтры (`useFilterStore`) не трогаются; при переходе меню скрывается (`isExpenseDatePickerActive`)
-- **GlassSelect** — prop `size="compact"` (52px) для полей шага 2
+- **Категории/магазины** — `useReferenceStore` + API; TEMP exclude income categories; fallback mock helpers
+- **Сохранение:** `submitNewExpense.js` — TEMP локально (без POST operations)
+- **GlassSelect** — `size="compact"` на шаге 2
+
+## Chat
+- **API:** `lib/api/chat.js` → `POST /api/chat/message/` body `{ content }`
+- **UI:** `useState` messages; send, quick questions, loading «Cash Ask печатает…»
+- **ChatHistory** — моки (`chatMocks.js`)
 
 ## Zustand anti-pattern
 НЕ создавать вычисляемые массивы как геттеры в store (sortedX, groupedX) —

@@ -5,12 +5,13 @@ import { Check, ChevronRight } from 'lucide-react'
 
 import { BackButton } from '../../shared/ui/BackButton/BackButton.jsx'
 import { GlassSelect } from '../../shared/ui/GlassSelect/GlassSelect.jsx'
-import { getExpenseCategories } from '../../lib/utils/getExpenseCategories.js'
-import { getExpenseServiceNameExamples } from '../../lib/utils/getExpenseServiceNameExamples.js'
+import { filterExpenseCategories } from '../../lib/utils/filterExpenseCategories.js'
 import { formatExpenseDateDisplay } from '../../lib/utils/formatExpenseDate.js'
+import { mapReferenceToSelectOptions } from '../../lib/utils/mapReferenceToSelectOptions.js'
 import { submitNewExpense } from '../../lib/actionMenu/submitNewExpense.js'
 import { useAccountsStore } from '../../stores/useAccountsStore.js'
 import { useActionMenuStore } from '../../stores/useActionMenuStore.js'
+import { useReferenceStore } from '../../stores/useReferenceStore.js'
 
 import styles from './ActionMenuForm.module.css'
 
@@ -28,15 +29,25 @@ export function ActionMenuNewExpense({ isInteractive = true, onBack }) {
   const patchNewExpenseDraft = useActionMenuStore((state) => state.patchNewExpenseDraft)
   const openExpenseDatePicker = useActionMenuStore((state) => state.openExpenseDatePicker)
 
-  const categoryOptions = useMemo(() => {
-    const categories = getExpenseCategories()
-    return categories.map((name) => ({ value: name, label: name }))
-  }, [])
+  // TEMP: useReferenceStore — см. stores/useReferenceStore.js; позже можно локальный fetch
+  const referenceCategories = useReferenceStore((state) => state.categories)
+  const referenceServices = useReferenceStore((state) => state.services)
+  const fetchReference = useReferenceStore((state) => state.fetchReference)
 
-  const serviceOptions = useMemo(() => {
-    const names = getExpenseServiceNameExamples()
-    return names.map((name) => ({ value: name, label: name }))
-  }, [])
+  useEffect(() => {
+    fetchReference()
+  }, [fetchReference])
+
+  // TEMP: value = name через mapReferenceToSelectOptions; категории — filterExpenseCategories
+  const categoryOptions = useMemo(
+    () => mapReferenceToSelectOptions(filterExpenseCategories(referenceCategories)),
+    [referenceCategories],
+  )
+
+  const serviceOptions = useMemo(
+    () => mapReferenceToSelectOptions(referenceServices),
+    [referenceServices],
+  )
 
   useEffect(() => {
     if (!draft || draft.categoryName || !categoryOptions.length) return

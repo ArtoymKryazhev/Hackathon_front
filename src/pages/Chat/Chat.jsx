@@ -10,10 +10,21 @@ import iconMenu from '../../assets/icons/icon-menu.svg'
 import iconMicrophone from '../../assets/icons/icon_microphone.svg'
 import iconSendMessage from '../../assets/icons/icons_send_massage.svg'
 import iconShare from '../../assets/icons/icon-share.svg'
-import { messages as initialMessages, quickQuestions } from '../../lib/mocks/chatMocks.js'
+import { sendChatMessage } from '../../lib/api/chat.js'
+import { quickQuestions } from '../../lib/mocks/chatMocks.js'
 import { BackButton } from '../../shared/ui/BackButton/BackButton.jsx'
 
 import styles from './Chat.module.css'
+
+const WELCOME_MESSAGE = {
+  id: 'welcome',
+  role: 'ai',
+  text: 'Привет! Я Cash Ask — ваш финансовый помощник. Спросите о тратах, балансе или целях.',
+  timestamp: new Date().toISOString(),
+}
+
+const createMessageId = (prefix) =>
+  `${prefix}_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`
 
 async function copyMessageText(text) {
   await navigator.clipboard.writeText(text)
@@ -99,10 +110,12 @@ function ChatMessage({ message, isActive, onToggleActive }) {
 export function Chat() {
   const navigate = useNavigate()
 
-  // TEMP / TODO: локальный state до подключения backend и AI-интеграции
-  const [messages] = useState(initialMessages)
+  const [messages, setMessages] = useState([WELCOME_MESSAGE])
   const [inputValue, setInputValue] = useState('')
   const [activeMessageId, setActiveMessageId] = useState(null)
+  const [sessionId, setSessionId] = useState(null)
+  const [isSending, setIsSending] = useState(false)
+  const [sendError, setSendError] = useState(null)
   const messagesScrollRef = useRef(null)
 
   const scrollMessagesToBottom = useCallback(() => {
@@ -136,16 +149,71 @@ export function Chat() {
 
   const goToHistory = () => navigate('/chat/history')
 
+  const submitMessage = useCallback(
+    async (rawText) => {
+      const text = rawText.trim()
+      if (!text || isSending) return
+
+      const userMessage = {
+        id: createMessageId('user'),
+        role: 'user',
+        text,
+        timestamp: new Date().toISOString(),
+      }
+
+      setMessages((prev) => [...prev, userMessage])
+      setInputValue('')
+      setSendError(null)
+      setIsSending(true)
+
+      try {
+        const data = await sendChatMessage(text, sessionId)
+
+        if (data?.session_id != null) {
+          setSessionId(data.session_id)
+        }
+
+        const aiMessage = {
+          id: String(data?.id ?? createMessageId('ai')),
+          role: 'ai',
+          text: data?.content || 'Не удалось получить ответ.',
+          timestamp: data?.created_at || new Date().toISOString(),
+        }
+
+        setMessages((prev) => [...prev, aiMessage])
+      } catch (err) {
+        const message =
+          err.response?.data?.error ||
+          err.response?.data?.detail ||
+          err.message ||
+          'Не удалось отправить сообщение'
+        setSendError(message)
+      } finally {
+        setIsSending(false)
+      }
+    },
+    [isSending, sessionId],
+  )
+
   const handleQuickQuestion = (question) => {
-    setInputValue(question)
+    submitMessage(question)
   }
 
-  // TEMP / TODO: отправка сообщения, вложения и голосовой режим
-  const handleSend = () => {}
+  const handleSend = () => {
+    submitMessage(inputValue)
+  }
+
+  const handleInputKeyDown = (event) => {
+    if (event.key !== 'Enter') return
+    event.preventDefault()
+    handleSend()
+  }
 
   const handleVoice = () => {}
 
   const handleAddAttachment = () => {}
+
+  const isSendDisabled = isSending || !inputValue.trim()
 
   return (
     <div className={styles.page}>
@@ -174,6 +242,19 @@ export function Chat() {
               onToggleActive={handleToggleMessage}
             />
           ))}
+
+          {isSending ? (
+            <li className={`${styles.messageRow} ${styles.messageRowAi}`}>
+              <div className={styles.messageInner}>
+                <div className={styles.aiAvatar} aria-hidden="true">
+                  <img className={styles.aiAvatarIcon} src={iconHackcashAi} alt="" />
+                </div>
+                <div className={styles.messageBody}>
+                  <div className={styles.bubble}>Cash Ask печатает…</div>
+                </div>
+              </div>
+            </li>
+          ) : null}
         </ul>
 
         <ul className={styles.quickList} aria-label="Быстрые вопросы">
@@ -182,6 +263,7 @@ export function Chat() {
               <button
                 type="button"
                 className={styles.quickButton}
+                disabled={isSending}
                 onClick={() => handleQuickQuestion(question)}
               >
                 {question}
@@ -193,6 +275,11 @@ export function Chat() {
 
       <footer className={styles.bottom}>
         <p className={styles.disclaimer}>Нейросеть может допускать ошибки</p>
+        {sendError ? (
+          <p className={styles.sendError} role="alert">
+            {sendError}
+          </p>
+        ) : null}
 
         <div className={styles.inputBar} aria-label="Поле ввода сообщения">
           <button
@@ -208,7 +295,9 @@ export function Chat() {
             className={styles.input}
             type="text"
             value={inputValue}
+            disabled={isSending}
             onChange={(event) => setInputValue(event.target.value)}
+            onKeyDown={handleInputKeyDown}
             placeholder="Спросите Cash Ask"
             aria-label="Спросите Cash Ask"
           />
@@ -226,6 +315,7 @@ export function Chat() {
             type="button"
             className={styles.sendButton}
             aria-label="Отправить"
+            disabled={isSendDisabled}
             onClick={handleSend}
           >
             <img className={styles.iconSend} src={iconSendMessage} alt="" aria-hidden="true" />

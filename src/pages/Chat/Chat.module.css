@@ -186,6 +186,7 @@
   line-height: var(--line-height-normal);
   color: var(--color-text-primary);
   word-break: break-word;
+  white-space: pre-wrap;
   text-align: left;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
@@ -339,6 +340,16 @@
   color: rgba(44, 44, 44, 0.2);
 }
 
+.sendError {
+  margin: 0 0 8px;
+  padding: 0 24px;
+  text-align: center;
+  font-family: var(--font-brand);
+  font-size: 14px;
+  line-height: var(--line-height-normal);
+  color: #b00020;
+}
+
 .inputBar {
   height: var(--control-height-lg);
   display: grid;
@@ -406,6 +417,11 @@
   justify-content: center;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
+}
+
+.sendButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 .iconSend {

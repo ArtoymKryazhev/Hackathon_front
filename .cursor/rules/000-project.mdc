@@ -19,12 +19,15 @@ Mobile-first. Аудитория — люди без финансовой экс
 - src/shared/ui/      — атомарные UI-компоненты (Button, Input, Card, GlassSelect, DonutChartCard, …)
 - src/components/     — составные блоки (AppShell, BottomNav, ActionMenu)
 - src/pages/          — экраны целиком (`Transactions/Stats/`, `Transactions/Category/`, …)
-- src/stores/         — zustand-сторы (auth, accounts, transactions, useFilterStore, useActionMenuStore; не src/store/)
-- src/lib/api/        — axios-функции (не src/api/)
+- src/stores/         — zustand (auth, accounts, transactions, useFilterStore, useActionMenuStore, useReferenceStore TEMP)
+- src/lib/api/        — axios: auth, products, operations, services, categories, chat (не src/api/)
+- src/lib/products/   — mapApiProductToClient, clientProductCrud (TEMP CRUD)
+- src/lib/operations/ — mapApiOperationToClient
 - src/lib/mocks|utils|constants|hooks — данные и вспомогательная логика
-- Chat/ChatHistory — UI на моках (`chatMocks.js`), без API; TEMP до AI/backend
-- ActionMenu — глобальное меню «+»; конфиг `lib/actionMenu/`; flow «Новая трата» (3 шага) + «Новое поступление» (TEMP); date-picker переиспользуется с `?from=newExpense`
-- TransactionFilter — фильтры операций (`useFilterStore`); date-picker `/transactions/filter/date-picker`
+- Chat — `/chat` POST backend; локальный useState; ChatHistory — моки
+- ActionMenu — глобальное меню «+»; справочники categories/services из API (useReferenceStore TEMP)
+- TransactionFilter — фильтры (`useFilterStore`); date-picker `/transactions/filter/date-picker`
+- Profile — debug API-разведка (временно)
 
 ## НЕЛЬЗЯ
 - Не добавлять TypeScript
