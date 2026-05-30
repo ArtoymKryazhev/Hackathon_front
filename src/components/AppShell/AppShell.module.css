@@ -17,6 +17,10 @@
   padding-bottom: calc(var(--bottom-nav-offset) + env(safe-area-inset-bottom));
 }
 
+.contentNoScroll {
+  overflow: hidden;
+}
+
 .stateMessage {
   flex: 1;
   display: flex;

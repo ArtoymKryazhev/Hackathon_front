@@ -83,6 +83,11 @@
   --action-menu-card-blur: 8px;
   --action-menu-separator-bg: #dbdbdb;
   --action-menu-separator-track-bg: #c4c4c4;
+
+  /* Переиспользуемый frosted glass (как action menu) */
+  --surface-glass-bg: var(--action-menu-card-bg);
+  --surface-glass-blur: var(--action-menu-card-blur);
+  --surface-glass-shadow: var(--shadow-icon);
   --chat-input-gap-above-nav: 22px;
 
   /* Analytics / plan card */

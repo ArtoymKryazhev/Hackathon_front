@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { Outlet } from 'react-router-dom'
+import { Outlet, useLocation } from 'react-router-dom'
 
 import { useAccountsStore } from '../../stores/useAccountsStore.js'
 import { useAuthStore } from '../../stores/useAuthStore.js'
@@ -36,7 +36,15 @@ export function AppShell({ withBottomNav }) {
     }
   }, [])
 
-  const mainClassName = withBottomNav ? styles.contentWithNav : styles.content
+  const { pathname } = useLocation()
+  const isHomePage = pathname === '/'
+
+  const mainClassName = [
+    withBottomNav ? styles.contentWithNav : styles.content,
+    isHomePage ? styles.contentNoScroll : null,
+  ]
+    .filter(Boolean)
+    .join(' ')
 
   const isAuthPending = authLoading || (!user && !authError)
   const isProductsPending = Boolean(user) && !productsLoaded

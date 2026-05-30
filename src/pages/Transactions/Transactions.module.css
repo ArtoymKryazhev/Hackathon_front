@@ -122,7 +122,3 @@
   display: flex;
   flex-direction: column;
 }
-
-.transactionList > article:last-child {
-  border-bottom: 0;
-}

@@ -4,7 +4,7 @@ import { Chip } from '../Chip/Chip.jsx'
 
 import iconAdd from '../../../assets/icons/icon-add.svg'
 import iconMicrophone from '../../../assets/icons/icon_microphone.svg'
-import iconSendWaves from '../../../assets/icons/icon-send-waves.svg'
+import iconSendMessage from '../../../assets/icons/icons_send_massage.svg'
 
 import styles from './AiChatWidget.module.css'
 
@@ -67,7 +67,7 @@ export function AiChatWidget({
           aria-label="Отправить"
           onClick={submit}
         >
-          <img className={styles.sendIcon} alt="" src={iconSendWaves} />
+          <img className={styles.sendIcon} alt="" src={iconSendMessage} />
         </button>
       </div>
     </section>

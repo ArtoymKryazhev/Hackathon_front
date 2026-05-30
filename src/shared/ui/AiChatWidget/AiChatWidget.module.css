@@ -79,10 +79,9 @@
 }
 
 .sendIcon {
-  width: 21px;
+  width: 24px;
   height: 24px;
   display: block;
-  transform: translateX(1.5px);
 }
 
 .iconButton:focus-visible,

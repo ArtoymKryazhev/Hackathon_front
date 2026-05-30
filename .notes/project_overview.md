@@ -11,7 +11,7 @@
 | Редактирование продукта | `/products/:id` | ✅ TEMP save/delete |
 | Транзакции и платежи | `/transactions` | ✅ моки + action menu |
 | Аналитика | `/transactions/stats` | ✅ |
-| Чат Cash Ask | `/chat` | ✅ UI, моки |
+| Чат Cash Ask | `/chat` | ✅ UI, моки, скролл вниз при открытии |
 | История чатов | `/chat/history` | ✅ UI |
 | Фильтры / тег / settings / profile | … | 🔶 заглушки |
 
@@ -26,7 +26,7 @@ React + Vite, JavaScript, CSS Modules, zustand, react-router-dom, recharts, axio
 ## Структура кода
 - `src/pages/` — экраны
 - `src/components/` — AppShell, BottomNav, **ActionMenu**
-- `src/shared/ui/` — ProductCard, BackButton, …
+- `src/shared/ui/` — ProductCard, BackButton, **GlassSelect**, AiChatWidget, TransactionItem, …
 - `src/lib/actionMenu/` — presets, route map, handlers, hooks
 - `src/stores/` — auth, accounts, transactions, **useActionMenuStore**
 - `src/assets/icons/modal_menu/` — иконки пунктов action menu

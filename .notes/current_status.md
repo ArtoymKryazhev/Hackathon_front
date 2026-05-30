@@ -15,8 +15,15 @@
 
 ### Chat (`/chat`) и история (`/chat/history`)
 - [x] **Chat** — шапка, сообщения из `chatMocks.js`, actions, quick questions, input TEMP
+- [x] **Chat** — автопрокрутка ленты вниз при открытии и при изменении `messages` (`scrollTop` на `.messages`)
+- [x] **Иконка отправки** — `icons_send_massage.svg` в Chat и `AiChatWidget` (логика send — TEMP)
 - [x] **ChatHistory** — секции из моков, навигация
 - [x] **BackButton** в шапках Chat и ChatHistory
+
+### UI / страницы (последняя сессия)
+- [x] **GlassSelect** — кастомный select (валюта, банк) в ProductEdit; портал, glass-стиль по Figma
+- [x] **Home** — без вертикального скролла страницы (`overflow: hidden`, `contentNoScroll` в AppShell на `/`)
+- [x] **Transactions** — у `TransactionItem` убраны разделительные линии между операциями
 
 ### Ранее
 - [x] ProductEdit, Accounts, иконки банков, TEMP client-side CRUD
@@ -62,12 +69,12 @@ React + Vite | JavaScript | CSS Modules | zustand | recharts | axios | react-rou
 | Страница | Роут | Статус |
 |----------|------|--------|
 | Home | `/` | ✅ + action menu |
-| Transactions | `/transactions` | ✅ моки + action menu |
+| Transactions | `/transactions` | ✅ моки, без разделителей в списке |
 | Settings | `/settings` | 🔶 заглушка + action menu |
 | Accounts | `/accounts` | ✅ |
 | ProductEdit | `/products/:id` | ✅ TEMP CRUD |
 | TransactionStats | `/transactions/stats` | ✅ |
-| Chat | `/chat` | ✅ UI + локальное поведение |
+| Chat | `/chat` | ✅ UI, скролл вниз, иконка send |
 | ChatHistory | `/chat/history` | ✅ UI + навигация |
 | TransactionFilter | `/transactions/filter` | 🔶 заглушка |
 | TransactionTag | `/transactions/tags/:tagId` | 🔶 заглушка |

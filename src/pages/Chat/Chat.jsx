@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import iconAdd from '../../assets/icons/icon-add.svg'
@@ -8,7 +8,7 @@ import iconHackcashAi from '../../assets/icons/icon_hackcash_ai.svg'
 import iconLike from '../../assets/icons/icon-like.svg'
 import iconMenu from '../../assets/icons/icon-menu.svg'
 import iconMicrophone from '../../assets/icons/icon_microphone.svg'
-import iconSendWaves from '../../assets/icons/icon-send-waves.svg'
+import iconSendMessage from '../../assets/icons/icons_send_massage.svg'
 import iconShare from '../../assets/icons/icon-share.svg'
 import { messages as initialMessages, quickQuestions } from '../../lib/mocks/chatMocks.js'
 import { BackButton } from '../../shared/ui/BackButton/BackButton.jsx'
@@ -103,6 +103,19 @@ export function Chat() {
   const [messages] = useState(initialMessages)
   const [inputValue, setInputValue] = useState('')
   const [activeMessageId, setActiveMessageId] = useState(null)
+  const messagesScrollRef = useRef(null)
+
+  const scrollMessagesToBottom = useCallback(() => {
+    const container = messagesScrollRef.current
+    if (!container) return
+    container.scrollTop = container.scrollHeight
+  }, [])
+
+  useEffect(() => {
+    scrollMessagesToBottom()
+    const frameId = requestAnimationFrame(scrollMessagesToBottom)
+    return () => cancelAnimationFrame(frameId)
+  }, [messages, scrollMessagesToBottom])
 
   useEffect(() => {
     if (!activeMessageId) return undefined
@@ -151,7 +164,7 @@ export function Chat() {
         </div>
       </header>
 
-      <main className={styles.messages} aria-label="Сообщения чата">
+      <main ref={messagesScrollRef} className={styles.messages} aria-label="Сообщения чата">
         <ul className={styles.messageList}>
           {messages.map((message) => (
             <ChatMessage
@@ -215,7 +228,7 @@ export function Chat() {
             aria-label="Отправить"
             onClick={handleSend}
           >
-            <img className={styles.iconSend} src={iconSendWaves} alt="" aria-hidden="true" />
+            <img className={styles.iconSend} src={iconSendMessage} alt="" aria-hidden="true" />
           </button>
         </div>
       </footer>

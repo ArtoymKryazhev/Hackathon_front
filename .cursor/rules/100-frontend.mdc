@@ -22,6 +22,7 @@ alwaysApply: false
 - @media (min-width: 768px) — для планшета и выше
 - Минимальный touch-target: 44px
 - Hover-only UI: дублировать через tap/state + `@media (hover: hover)` (см. Chat actions, ActionMenu rows)
+- Длинные списки чата: `ref` на scroll-контейнер + `scrollTop = scrollHeight` в `useEffect` (не zustand)
 
 ## Состояние
 - Локальное — useState (Chat — TEMP до backend)

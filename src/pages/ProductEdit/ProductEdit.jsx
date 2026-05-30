@@ -5,6 +5,7 @@ import { saveProduct, deleteProduct } from '../../lib/api/products.js'
 import { BANK_OPTIONS, CURRENCY_OPTIONS } from '../../lib/constants/productEditOptions.js'
 import { getProductTypeTitle } from '../../lib/constants/productTypeTitleMap.js'
 import { BackButton } from '../../shared/ui/BackButton/BackButton.jsx'
+import { GlassSelect } from '../../shared/ui/GlassSelect/GlassSelect.jsx'
 import { ProductCard } from '../../shared/ui/ProductCard/ProductCard.jsx'
 import { useAccountsStore } from '../../stores/useAccountsStore.js'
 
@@ -55,6 +56,13 @@ function ProductEditForm({ product }) {
 
   const isCard = isCardProduct(product.product_type)
   const headerTitle = getProductTypeTitle(product.product_type)
+
+  const currencyOptions = useMemo(
+    () => CURRENCY_OPTIONS.map((code) => ({ value: code, label: code })),
+    [],
+  )
+
+  const bankOptions = useMemo(() => BANK_OPTIONS, [])
 
   const previewProduct = {
     ...product,
@@ -162,40 +170,22 @@ function ProductEditForm({ product }) {
         <div className={styles.fieldRow} aria-label="Валюта и банк">
           <div className={styles.fieldCol}>
             <h2 className={styles.fieldColTitle}>Валюта</h2>
-            <div className={styles.selectWrap}>
-              <select
-                className={styles.select}
-                value={formState.currency_code}
-                onChange={(event) =>
-                  setFormState((prev) => ({ ...prev, currency_code: event.target.value }))
-                }
-              >
-                {CURRENCY_OPTIONS.map((code) => (
-                  <option key={code} value={code}>
-                    {code}
-                  </option>
-                ))}
-              </select>
-            </div>
+            <GlassSelect
+              ariaLabel="Валюта"
+              value={formState.currency_code}
+              options={currencyOptions}
+              onChange={(currency_code) => setFormState((prev) => ({ ...prev, currency_code }))}
+            />
           </div>
 
           <div className={styles.fieldCol}>
             <h2 className={styles.fieldColTitle}>Банк</h2>
-            <div className={styles.selectWrap}>
-              <select
-                className={styles.select}
-                value={formState.bank_name}
-                onChange={(event) =>
-                  setFormState((prev) => ({ ...prev, bank_name: event.target.value }))
-                }
-              >
-                {BANK_OPTIONS.map((bank) => (
-                  <option key={bank.value} value={bank.value}>
-                    {bank.label}
-                  </option>
-                ))}
-              </select>
-            </div>
+            <GlassSelect
+              ariaLabel="Банк"
+              value={formState.bank_name}
+              options={bankOptions}
+              onChange={(bank_name) => setFormState((prev) => ({ ...prev, bank_name }))}
+            />
           </div>
         </div>
 

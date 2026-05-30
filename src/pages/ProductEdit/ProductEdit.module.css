@@ -92,10 +92,6 @@
   padding: 0 8px;
 }
 
-.fieldCol .select {
-  padding: 0 36px 0 20px;
-}
-
 .fieldError {
   margin: 0;
   padding: 0 24px;
@@ -106,8 +102,7 @@
   color: #ef3224;
 }
 
-.input,
-.select {
+.input {
   width: 100%;
   height: var(--control-height-lg);
   border: 0;
@@ -139,41 +134,7 @@
   margin: 0;
 }
 
-.selectWrap {
-  position: relative;
-  width: 100%;
-}
-
-.selectWrap::after {
-  content: '';
-  position: absolute;
-  right: 20px;
-  top: 50%;
-  width: 10px;
-  height: 10px;
-  border-right: 2px solid var(--color-text-secondary);
-  border-bottom: 2px solid var(--color-text-secondary);
-  transform: translateY(-65%) rotate(45deg);
-  pointer-events: none;
-}
-
-.select {
-  appearance: none;
-  -webkit-appearance: none;
-  cursor: pointer;
-  color: var(--color-text-secondary);
-  padding-right: 44px;
-}
-
-.select option {
-  color: var(--color-text-primary);
-  background: var(--color-surface);
-  font-family: var(--font-brand);
-  font-size: 18px;
-}
-
-.input:focus-visible,
-.select:focus-visible {
+.input:focus-visible {
   outline: 2px solid var(--color-accent-1);
   outline-offset: 2px;
 }

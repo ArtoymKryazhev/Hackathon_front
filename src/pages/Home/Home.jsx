@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import iconArrow from '../../assets/icons/icon_arrow.svg'
@@ -22,6 +22,15 @@ const ALL_CATEGORY_ID = 'all'
 
 export function Home() {
   const navigate = useNavigate()
+
+  useEffect(() => {
+    const previousOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+
+    return () => {
+      document.body.style.overflow = previousOverflow
+    }
+  }, [])
 
   const products = useAccountsStore((s) => s.products)
   const selectedCategoryId = useAccountsStore((s) => s.selectedCategoryId)
