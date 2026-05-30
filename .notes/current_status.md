@@ -1,9 +1,15 @@
 # current_status.md
 
 ## Последнее обновление
-30 мая 2026
+31 мая 2026
 
 ## Что сделано недавно
+
+### Docker
+- [x] **Продакшен-образ** — `Dockerfile` (node build + nginx:alpine)
+- [x] **nginx.conf** — SPA + прокси `/api` на `cashapps.ru` (аналог Vite proxy)
+- [x] **docker-compose.yml** — `web` на порту 8080; профиль `dev` для HMR (5173)
+- [x] **.dockerignore** — `nginx.conf` в контексте сборки (не исключать)
 
 ### Backend-интеграция
 - [x] **Products GET** — `fetchProducts()` + `mapApiProductToClient.js`; Home/Accounts/ProductEdit из API; fallback `bankProducts`
@@ -47,7 +53,15 @@
 - TransactionCategory: чипы — визуальные TEMP
 
 ## Стек
-React + Vite | JavaScript | CSS Modules | zustand | recharts | axios | react-router-dom
+React + Vite | JavaScript | CSS Modules | zustand | recharts | axios | react-router-dom | Docker (nginx)
+
+## Запуск
+
+| Режим | Команда | URL |
+|-------|---------|-----|
+| Dev (локально) | `npm run dev` | http://localhost:5173 |
+| Docker prod | `docker compose up --build web` | http://localhost:8080 |
+| Docker dev | `docker compose --profile dev up dev` | http://localhost:5173 |
 
 ## Бэкенд
 - **Base URL:** `https://cashapps.ru`

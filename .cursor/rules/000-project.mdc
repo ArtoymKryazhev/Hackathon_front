@@ -29,6 +29,14 @@ Mobile-first. Аудитория — люди без финансовой экс
 - TransactionFilter — фильтры (`useFilterStore`); date-picker `/transactions/filter/date-picker`
 - Profile — debug API-разведка (временно)
 
+## Docker (корень репозитория)
+- `Dockerfile` — multi-stage: `npm ci` + `vite build` → nginx:alpine
+- `nginx.conf` — SPA + прокси `/api` на `https://cashapps.ru` (как `vite.config.js`)
+- `docker-compose.yml` — сервис `web` (порт **8080:80**); профиль `dev` — Vite HMR на **5173**
+- `.dockerignore` — не исключать `nginx.conf` из контекста сборки
+- Прод: `docker compose up --build web` → http://localhost:8080
+- Dev в контейнере: `docker compose --profile dev up dev`
+
 ## НЕЛЬЗЯ
 - Не добавлять TypeScript
 - Не использовать UI-библиотеки (MUI, Ant, Chakra) без явного согласования

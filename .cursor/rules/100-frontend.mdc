@@ -40,6 +40,12 @@ store → useMemo + утилиты → props в shared/ui
 `fetchUser()` → `Promise.all([fetchProducts(), fetchOperations()])` → `<Outlet />`
 Mapper: `lib/products/mapApiProductToClient.js`, `lib/operations/mapApiOperationToClient.js`
 
+## API и прокси
+- Клиент: `apiClient` с `baseURL: '/api'` (`src/lib/api/axiosInstance.js`)
+- **Локально:** Vite proxy в `vite.config.js` → `https://cashapps.ru`
+- **Docker prod:** nginx в `nginx.conf` — те же правила (`/api/auth` → `/auth`, `/api/chat` → `/chat`, остальное `/api`)
+- Auth — отдельный `authClient` (`auth.js`), токены только в памяти
+
 ## DonutChartCard
 - Общий компонент: `src/shared/ui/DonutChartCard/` (recharts)
 - **TransactionStats** — суммы в центре и легенде (`totalAmount`, `monthLabel`)

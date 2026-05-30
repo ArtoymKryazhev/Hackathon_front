@@ -26,6 +26,11 @@
 ## Стек
 React + Vite, JavaScript, CSS Modules, zustand, react-router-dom, recharts, axios.
 
+## Развёртывание
+- **Локально:** `npm run dev` (Vite proxy → cashapps.ru)
+- **Docker:** `docker compose up --build web` → http://localhost:8080  
+  Статика из `dist/`, API через nginx (`Dockerfile`, `nginx.conf`, `docker-compose.yml`)
+
 ## Бэкенд
 - **URL:** `https://cashapps.ru`
 - **Auth:** `POST /auth/access/` — токены в памяти
