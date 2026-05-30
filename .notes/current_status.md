@@ -65,7 +65,7 @@ React + Vite | JavaScript | CSS Modules | zustand | recharts | axios | react-rou
 
 ## Бэкенд
 - **Base URL:** `https://cashapps.ru`
-- **Auth:** `POST /auth/access/` | **Products:** `GET /api/products/`
+- **Auth:** `POST /api/auth/access/` | **Products:** `GET /api/products/`
 - **Operations:** `GET /api/operations/` (paginated `{ count, results, next }`)
 - **Services:** `GET /api/services/` | **Categories:** `GET /api/categories/`
 - **Chat:** `POST /chat/message/` body `{ content }` — через proxy `/api/chat/message/`

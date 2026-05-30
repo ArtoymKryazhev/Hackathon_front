@@ -33,7 +33,7 @@ React + Vite, JavaScript, CSS Modules, zustand, react-router-dom, recharts, axio
 
 ## Бэкенд
 - **URL:** `https://cashapps.ru`
-- **Auth:** `POST /auth/access/` — токены в памяти
+- **Auth:** `POST /api/auth/access/` — токены в памяти
 - **Products:** `GET /api/products/` → `mapApiProductToClient`; CRUD — TEMP на фронте
 - **Operations:** `GET /api/operations/` → `mapApiOperationToClient`; Stats/Category/Filter
 - **Services / Categories:** справочники для ActionMenu
