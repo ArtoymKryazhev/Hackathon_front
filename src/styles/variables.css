@@ -81,8 +81,6 @@
     18px + var(--control-height-lg) + var(--action-menu-card-gap-above-nav) +
       env(safe-area-inset-bottom)
   );
-  /* Формы action menu — на уровне pill BottomNav, перекрывают нижнее меню */
-  --action-menu-form-panel-bottom: calc(18px + env(safe-area-inset-bottom));
   --modal-panel-bottom: var(--action-menu-card-bottom);
   --action-menu-card-padding: 30px;
   --action-menu-row-height: 49px;
